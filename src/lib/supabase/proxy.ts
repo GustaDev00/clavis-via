@@ -4,7 +4,7 @@ import type { Database } from "./database.types";
 import { supabaseEnv } from "./env";
 
 /** Rotas acessíveis sem sessão. */
-const PUBLIC_PATHS = new Set(["/"]);
+const PUBLIC_PATHS = new Set(["/", "/api/health"]);
 
 /**
  * Renova o token da sessão a cada requisição e faz o redirecionamento otimista:
