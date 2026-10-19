@@ -58,6 +58,20 @@ for (const device of DEVICES) {
         expect(await verticalOverflow(page), `${path} não deveria ter scroll`).toBeLessThanOrEqual(1);
       }
 
+      // Com a nota aberta, a grade encolhe e o botão Salvar continua visível acima do menu, sem rolar
+      await page.goto("/check-in");
+      await settle(page, 900);
+      await page.getByRole("radio", { name: "Paz" }).click();
+      await page.getByRole("button", { name: /Adicionar uma nota/ }).click();
+      await page.getByRole("textbox").fill("Um dia tranquilo, com tempo para mim.");
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await page.waitForTimeout(500);
+      const { saveBottom, navTop } = await page.evaluate(() => ({
+        saveBottom: [...document.querySelectorAll("button")].find((b) => b.textContent?.includes("Salvar check-in"))!.getBoundingClientRect().bottom,
+        navTop: document.querySelector("nav[aria-label='Navegação principal']")!.getBoundingClientRect().top,
+      }));
+      expect(saveBottom, "Salvar check-in deve ficar acima do menu com a nota aberta").toBeLessThanOrEqual(navTop);
+
       for (const path of LONG_PAGES) {
         await page.goto(path);
         await settle(page, 900);

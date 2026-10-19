@@ -51,9 +51,12 @@ export function EmotionPicker({ value, onChange, invalid, describedBy, labelledB
       className={cn(
         // Altura das linhas acompanha a altura da tela, com mínimo confortável para o toque
         "grid gap-[clamp(6px,1.2dvh,10px)] rounded-[30px] p-1",
+        "transition-[grid-template-rows,box-shadow] duration-[var(--dur-meso)] ease-out-soft",
         "grid-cols-2 grid-rows-[repeat(4,clamp(52px,8.4dvh,104px))]",
         "min-[360px]:grid-cols-6 min-[360px]:grid-rows-[repeat(3,clamp(56px,10.6dvh,124px))]",
-        "transition-shadow duration-[var(--dur-meso)]",
+        // Nota aberta (CheckInForm): linhas mais baixas, com transição suave
+        "group-data-[note=open]/checkin:grid-rows-[repeat(4,clamp(46px,6.6dvh,88px))]",
+        "min-[360px]:group-data-[note=open]/checkin:grid-rows-[repeat(3,clamp(46px,7.4dvh,96px))]",
         invalid && "shadow-[0_0_0_2px_rgb(201_80_108/0.45)]",
       )}
     >
@@ -107,10 +110,13 @@ export function EmotionPicker({ value, onChange, invalid, describedBy, labelledB
 
             <motion.span
               className="relative"
-              animate={{ scale: selected ? 1.08 : 1, y: selected ? -2 : 0 }}
+              animate={{ scale: selected ? 1.05 : 1, y: selected ? -1 : 0 }}
               transition={SPRING.select}
             >
-              <EmotionFace emotion={emotion.id} className="size-[clamp(30px,5.6dvh,48px)]" />
+              <EmotionFace
+                emotion={emotion.id}
+                className="size-[clamp(30px,5.6dvh,48px)] transition-[width,height] duration-[var(--dur-meso)] ease-out-soft group-data-[note=open]/checkin:size-[clamp(26px,4.2dvh,40px)]"
+              />
               {selected ? (
                 <motion.span
                   initial={{ scale: 0.4, opacity: 0 }}

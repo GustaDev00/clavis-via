@@ -60,7 +60,9 @@ export function CheckInForm({ headingId }: { headingId: string }) {
       action={formAction}
       onSubmit={handleSubmit}
       noValidate
-      className="flex flex-1 flex-col gap-[clamp(6px,1.4dvh,14px)]"
+      // Com a nota aberta, a grade de emoções encolhe (ver EmotionPicker) para tudo seguir na tela
+      data-note={noteOpen ? "open" : "closed"}
+      className="group/checkin flex flex-1 flex-col gap-[clamp(6px,1.4dvh,14px)]"
     >
       <input type="hidden" name="emotion" value={emotion ?? ""} />
 
@@ -116,7 +118,7 @@ export function CheckInForm({ headingId }: { headingId: string }) {
               }}
               maxLength={LIMITS.checkInNote}
               rows={2}
-              className="min-h-[clamp(64px,11dvh,112px)]"
+              className="min-h-[clamp(52px,10dvh,112px)]"
               label={
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.span
