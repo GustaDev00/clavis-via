@@ -42,7 +42,7 @@ export default async function PlanPage({ params, searchParams }: PageProps<"/pla
 
         <Reveal>
           <div
-            className="relative h-40 overflow-hidden rounded-card border border-white/70 shadow-lift"
+            className="relative h-[clamp(96px,17dvh,160px)] overflow-hidden rounded-card border border-white/70 shadow-lift"
             style={{ background: planPalette(plan.palette) }}
           >
             <KeyMark aria-hidden className="absolute -right-4 -bottom-8 h-56 w-auto opacity-30" />
@@ -53,7 +53,7 @@ export default async function PlanPage({ params, searchParams }: PageProps<"/pla
         </Reveal>
 
         <header className="flex flex-col gap-3">
-          <RevealHeading className="type-display text-[38px] text-ink">{plan.title}</RevealHeading>
+          <RevealHeading className="type-display text-[clamp(30px,5.4dvh,38px)] text-ink">{plan.title}</RevealHeading>
           <Reveal delay={0.2} className="flex flex-col gap-3">
             <p className="flex flex-wrap items-center gap-4 text-sm font-semibold text-text-soft">
               <span className="inline-flex items-center gap-1.5">

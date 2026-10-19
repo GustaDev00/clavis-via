@@ -151,7 +151,7 @@ Roda typecheck, lint, unitários, integração e E2E. Os de integração e E2E p
 |---|---|---|
 | Unitários (63) | `pnpm test` | Recomendação por emoção (varia com o check-in, determinística por dia), progresso e dias sequenciais, sequência de dias com check-in, datas no fuso de São Paulo (23h30 ≠ dia seguinte), validação com texto vazio, só espaços, no limite, acima do limite, HTML, emoji |
 | Integração (12) | `pnpm test:integration` | Dois visitantes reais no Supabase local: um não lê, não cria em nome do outro, não apaga nem edita dados do outro; CHECKs do banco; trigger de sequência; FK composta; papel sem sessão sem acesso |
-| E2E (41 mobile + 40 desktop) | `pnpm test:e2e` | Os **6 passos do desafio com F5**; erros ao enviar vazio; nome/nota/reflexão curtos e longos (contadores e limites); "Outro" exige descrição; HTML exibido como texto; clique duplo não duplica; teclado no seletor; todos os botões da navegação, voltar, filtros, dias bloqueados, 404; respiração guiada (o círculo cresce ao inspirar); reiniciar/sair com cancelar/Esc; isolamento entre dois navegadores; nenhuma tela estoura 320 px; **axe** sem violações graves |
+| E2E (52 mobile + 41 desktop) | `pnpm test:e2e` | Os **6 passos do desafio com F5**; erros ao enviar vazio; nome/nota/reflexão curtos e longos (contadores e limites); "Outro" exige descrição; HTML exibido como texto; clique duplo não duplica; teclado no seletor; todos os botões da navegação, voltar, filtros, dias bloqueados, 404; **matriz de 5 aparelhos** (telas curtas sem scroll, telas longas sem nada atrás do menu); respiração guiada (o círculo cresce ao inspirar); reiniciar/sair com cancelar/Esc; isolamento entre dois navegadores; nenhuma tela estoura 320 px; **axe** sem violações graves |
 
 O CI (GitHub Actions) roda tudo a cada push: um job de tipos, lint e unitários, e outro que sobe o Supabase local em Docker para a integração e o E2E em build de produção.
 
@@ -160,6 +160,15 @@ O CI (GitHub Actions) roda tudo a cada push: um job de tipos, lint e unitários,
 - **Vercel**: projeto conectado ao repositório. Cada push na `main` publica em produção e cada PR ganha uma URL de preview. As funções rodam em `gru1` (São Paulo), na mesma região do banco.
 - **Supabase**: provisionado pelo Marketplace da Vercel (as variáveis são sincronizadas automaticamente). Na criação foi preciso ligar *Allow anonymous sign-ins* em Authentication → Sign In / Providers.
 - **Saúde**: `GET /api/health` responde se o app e a Auth do Supabase estão de pé (para monitor de uptime).
+
+## Responsividade (mobile-first)
+
+As medidas consideram a **altura visível no navegador**, já sem as barras do Safari e do Chrome. Num iPhone SE isso dá ~553px, não os 667px da tela.
+
+- **Telas de um gesto cabem inteiras, sem scroll**: Entrada, Check-in, Hoje, dia bloqueado e 404. Tamanhos de fonte, ícones, campos e botões são fluidos pela altura (`clamp(min, X·dvh, max)`). A grade de emoções preenche o espaço livre, e em telas baixas detalhes secundários são recolhidos ou encurtados. Ex.: a nota do check-in vira "＋ Adicionar uma nota".
+- **Telas longas de verdade rolam** (planos, detalhe do plano, dia, jornada, prática com respiração), com o menu fixo embaixo e nada escondido atrás dele.
+- Abaixo de ~540px de altura (celular deitado) as telas encaixadas voltam a rolar, em vez de esmagar o conteúdo. Em tablet e desktop elas param de esticar a partir de ~680px de área útil.
+- Tudo isso é verificado por `tests/e2e/responsivo.spec.ts` em: iPhone SE (Safari) 375×553, Android pequeno 360×640, iPhone 14 (Safari) 390×664, iPhone Pro Max (Safari) 430×740 e Pixel 7 412×839.
 
 ## Movimento e acessibilidade
 

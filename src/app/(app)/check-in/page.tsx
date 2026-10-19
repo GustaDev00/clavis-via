@@ -15,15 +15,16 @@ export default async function CheckInPage({ searchParams }: PageProps<"/check-in
 
   return (
     <PageTransition>
-      <section className="flex flex-col gap-7 pt-2">
-        <header className="flex flex-col gap-3">
-          <Reveal>
+      {/* Ocupa a altura visível: a grade de emoções preenche o espaço que sobrar */}
+      <section className="screen-fit gap-[clamp(10px,2dvh,24px)] pt-[clamp(2px,1dvh,10px)]">
+        <header className="flex flex-col gap-[clamp(4px,1dvh,12px)]">
+          <Reveal className="short:hidden">
             <p className="eyebrow text-lav-700">Check-in de hoje</p>
           </Reveal>
-          <RevealHeading id="check-in-heading" className="type-display text-[40px] text-ink">
+          <RevealHeading id="check-in-heading" className="type-display text-[clamp(26px,5dvh,40px)] text-ink">
             Como você está chegando hoje?
           </RevealHeading>
-          <Reveal delay={0.3}>
+          <Reveal delay={0.3} className="short:hidden">
             <p className="text-[15px] leading-6 text-text-soft">
               Escolha o que mais representa o seu momento agora. Não existe resposta certa.
             </p>

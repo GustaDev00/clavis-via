@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { checkIn, enterAsDemo, visitorName } from "./helpers";
+import { checkIn, enterAsDemo, openNote, visitorName } from "./helpers";
 
 const long = (length: number, word = "texto ") => word.repeat(Math.ceil(length / word.length)).slice(0, length);
 
@@ -13,7 +13,9 @@ test.describe("Entrada: nome do visitante", () => {
   test("espaços extras são normalizados", async ({ page }) => {
     await enterAsDemo(page, "   Ana     Clara   ");
     await page.goto("/hoje");
-    await expect(page.getByRole("heading", { level: 1 })).toContainText("Ana Clara");
+    // Nome completo normalizado no avatar; a saudação usa o primeiro nome
+    await expect(page.getByRole("link", { name: "Minha jornada de Ana Clara" })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("Ana");
   });
 
   test("nome longo demais mostra erro e não entra; corrigindo, entra", async ({ page }) => {
@@ -86,7 +88,14 @@ test.describe("Check-in", () => {
     await expect(page.getByText("Saudade de casa")).toBeVisible();
   });
 
+  test("nota fica recolhida até ser pedida e recebe o foco ao abrir", async ({ page }) => {
+    await expect(page.getByRole("textbox")).toHaveCount(0);
+    await page.getByRole("button", { name: /Adicionar uma nota/ }).click();
+    await expect(page.getByRole("textbox")).toBeFocused();
+  });
+
   test("nota é limitada a 280 caracteres e o contador acompanha", async ({ page }) => {
+    await openNote(page);
     const note = page.getByRole("textbox");
     await note.fill("Oi");
     await expect(page.getByText("2/280")).toBeVisible();

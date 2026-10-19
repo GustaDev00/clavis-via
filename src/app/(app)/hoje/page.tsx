@@ -8,7 +8,7 @@ import { PageTransition } from "@/components/motion/page-transition";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { RevealHeading } from "@/components/motion/reveal-heading";
 import { ButtonLink } from "@/components/ui/button";
-import { Card, DemoBadge } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { FlashToast } from "@/components/ui/flash-toast";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { getTodayCheckIn } from "@/lib/dal/check-ins";
@@ -28,6 +28,10 @@ const FLASH: Record<string, string> = {
   pratica: "Prática registrada na sua jornada.",
 };
 
+/**
+ * Painel do dia: cabe em uma tela no celular (screen-fit).
+ * Check-in → "Sua chave de hoje" (estica para ocupar o espaço livre) → um único próximo passo de plano.
+ */
 export default async function TodayPage({ searchParams }: PageProps<"/hoje">) {
   const now = new Date();
   const todayKey = toDayKey(now);
@@ -42,11 +46,16 @@ export default async function TodayPage({ searchParams }: PageProps<"/hoje">) {
 
   const emotion = checkIn?.emotion ?? null;
   const practice = pickPractice(practices, emotion, todayKey);
-  const suggestedPlan = pickPlan(plans, emotion, progressBySlug(plans));
-  const inProgress = plans.filter((plan) => plan.progress.isStarted && !plan.progress.isComplete);
   const practiceDoneToday = completions.some(
     (completion) => completion.practice?.slug === practice?.slug && toDayKey(new Date(completion.completed_at)) === todayKey,
   );
+
+  // Um único próximo passo: o plano em andamento mais recente; sem nenhum, a sugestão para a emoção
+  const inProgress = plans
+    .filter((plan) => plan.progress.isStarted && !plan.progress.isComplete)
+    .sort((a, b) => (b.startedAt ?? "").localeCompare(a.startedAt ?? ""));
+  const nextPlan = inProgress[0] ?? pickPlan(plans, emotion, progressBySlug(plans));
+  const isContinuing = Boolean(nextPlan && inProgress[0]?.slug === nextPlan.slug);
 
   const tone = TONES[emotion ? getEmotion(emotion).tone : "aurora"];
   const dateLabel = new Intl.DateTimeFormat("pt-BR", {
@@ -56,32 +65,33 @@ export default async function TodayPage({ searchParams }: PageProps<"/hoje">) {
     timeZone: "America/Sao_Paulo",
   }).format(now);
   const flash = typeof salvo === "string" ? (FLASH[salvo] ?? null) : null;
+  // Cumprimenta pelo primeiro nome: mais próximo e cabe em uma linha mesmo com nomes longos
+  const firstName = viewer.displayName.split(" ")[0];
 
   return (
     <PageTransition>
-      <section className="flex flex-col gap-6 pt-2">
-        <header className="flex flex-col gap-2">
-          <Reveal>
+      <section className="screen-fit gap-[clamp(10px,2dvh,20px)] pt-[clamp(2px,1dvh,10px)]">
+        <header className="flex flex-col gap-[clamp(2px,0.8dvh,8px)]">
+          <Reveal className="short:hidden">
             <p className="eyebrow text-lav-700">{dateLabel}</p>
           </Reveal>
-          <RevealHeading className="type-display text-[40px] text-ink [overflow-wrap:anywhere]">
-            {greetingFor(now)}, {viewer.displayName}
+          <RevealHeading className="type-display text-[clamp(26px,5.2dvh,40px)] text-ink [overflow-wrap:anywhere]">
+            {greetingFor(now)}, {firstName}
           </RevealHeading>
-          <Reveal delay={0.25}>
-            <p className="text-[15px] text-text-soft">Que bom ter você aqui hoje.</p>
-          </Reveal>
         </header>
 
-        <Stagger delay={0.3} className="flex flex-col gap-4">
+        <Stagger delay={0.3} className="flex flex-1 flex-col gap-[clamp(8px,1.6dvh,16px)]">
           <StaggerItem>
             {checkIn ? (
-              <Card className="flex items-center gap-4 p-4">
-                <EmotionFace emotion={checkIn.emotion} className="size-14 shrink-0" />
-                <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+              <Card className="flex items-center gap-3.5 p-[clamp(10px,1.8dvh,16px)]">
+                <EmotionFace emotion={checkIn.emotion} className="size-[clamp(40px,6.4dvh,56px)] shrink-0" />
+                <div className="flex min-w-0 flex-1 flex-col">
                   <p className="text-xs font-semibold text-muted">Você chegou com · {formatMoment(checkIn.created_at, now)}</p>
-                  <p className="type-display text-[24px] text-ink">{getEmotion(checkIn.emotion).label}</p>
+                  <p className="type-display text-[clamp(20px,3dvh,24px)] text-ink">{getEmotion(checkIn.emotion).label}</p>
                   {checkIn.note ? (
-                    <p className="line-clamp-2 text-sm leading-5 text-text-soft [overflow-wrap:anywhere]">“{checkIn.note}”</p>
+                    <p className="line-clamp-1 text-sm leading-5 text-text-soft [overflow-wrap:anywhere] xshort:hidden tall:line-clamp-2">
+                      “{checkIn.note}”
+                    </p>
                   ) : null}
                 </div>
                 <Link
@@ -94,119 +104,95 @@ export default async function TodayPage({ searchParams }: PageProps<"/hoje">) {
                 </Link>
               </Card>
             ) : (
-              <Card className="flex flex-col gap-4 p-5">
-                <div className="flex items-center gap-3">
-                  <div className="flex -space-x-3">
-                    {(["paz", "ansiedade", "cansaco"] as const).map((item) => (
-                      <EmotionFace key={item} emotion={item} className="size-10 rounded-full ring-2 ring-white" />
-                    ))}
-                  </div>
-                  <p className="text-[15px] font-semibold text-ink">Você ainda não fez o check-in de hoje.</p>
+              <Card className="flex items-center gap-3 p-[clamp(10px,1.8dvh,16px)]">
+                <div className="flex shrink-0 -space-x-3">
+                  {(["paz", "ansiedade", "cansaco"] as const).map((item) => (
+                    <EmotionFace key={item} emotion={item} className="size-9 rounded-full ring-2 ring-white" />
+                  ))}
                 </div>
-                <ButtonLink href="/check-in" transitionTypes={["nav-tab"]} size="lg">
+                <p className="flex-1 text-sm leading-5 font-semibold text-ink">Você ainda não fez o check-in de hoje.</p>
+                <ButtonLink href="/check-in" transitionTypes={["nav-tab"]} size="sm" className="shrink-0">
                   Fazer check-in
-                  <ArrowRight className="size-4" aria-hidden />
                 </ButtonLink>
               </Card>
             )}
           </StaggerItem>
 
           {practice ? (
-            <StaggerItem>
+            <StaggerItem className="flex flex-1 flex-col">
               <article
-                className="relative overflow-hidden rounded-card border border-white/70 p-6 shadow-lift"
+                className="relative flex flex-1 flex-col justify-between gap-[clamp(8px,2dvh,20px)] overflow-hidden rounded-card border border-white/70 p-[clamp(14px,2.8dvh,24px)] shadow-lift"
                 style={{ background: tone.surface }}
               >
-                <KeyMark aria-hidden className="pointer-events-none absolute -top-4 -right-6 h-48 w-auto opacity-25" />
-                <div className="relative flex flex-col gap-3">
-                  <p className="eyebrow" style={{ color: tone.ink }}>
+                <KeyMark aria-hidden className="pointer-events-none absolute -top-4 -right-6 h-[clamp(120px,24dvh,200px)] w-auto opacity-25" />
+                <div className="relative flex flex-col gap-[clamp(6px,1.2dvh,12px)]">
+                  <p className="eyebrow flex items-center gap-2" style={{ color: tone.ink }}>
                     Sua chave de hoje
+                    <span className="rounded-full bg-white/60 px-2 py-0.5 text-[10px] tracking-wide text-lav-700 normal-case">
+                      demonstração
+                    </span>
                   </p>
-                  <h2 className="type-display text-[32px] text-ink">{practice.key_title}</h2>
-                  <p className="text-[15px] leading-6 text-text-soft">{practice.key_message}</p>
-                  <p className="flex items-center gap-2 pt-1 text-xs font-semibold text-text-soft">
-                    <Sparkles className="size-3.5" aria-hidden />
+                  <h2 className="type-display text-[clamp(26px,4.4dvh,34px)] text-ink">{practice.key_title}</h2>
+                  <p className="text-[15px] leading-6 text-text-soft short:line-clamp-3 xshort:line-clamp-2 xshort:text-[14px] xshort:leading-5">{practice.key_message}</p>
+                  <p className="flex items-center gap-2 text-xs font-semibold text-text-soft xshort:hidden">
+                    <Sparkles className="size-3.5 shrink-0" aria-hidden />
                     {PRACTICE_KIND_LABEL[practice.kind]} · {practice.duration_minutes} min · {practice.title}
                   </p>
-                  <div className="flex flex-wrap items-center gap-3 pt-2">
-                    <ButtonLink
-                      href={`/hoje/pratica/${practice.slug}`}
-                      transitionTypes={["nav-forward"]}
-                      className="shadow-lift"
-                    >
-                      {practiceDoneToday ? "Rever prática" : "Ver prática de hoje"}
-                      <ArrowRight className="size-4" aria-hidden />
-                    </ButtonLink>
-                    {practiceDoneToday ? (
-                      <span className="rounded-full bg-success-bg px-3 py-1.5 text-xs font-bold text-success">Feita hoje</span>
-                    ) : null}
-                  </div>
-                  {!emotion ? (
-                    <p className="text-xs text-text-soft">Faça o check-in para receber uma prática pensada para o seu momento.</p>
+                </div>
+                <div className="relative flex flex-wrap items-center gap-3">
+                  <ButtonLink
+                    href={`/hoje/pratica/${practice.slug}`}
+                    transitionTypes={["nav-forward"]}
+                    className="h-[clamp(44px,6.4dvh,52px)] shadow-lift"
+                  >
+                    {practiceDoneToday ? "Rever prática" : "Ver prática de hoje"}
+                    <ArrowRight className="size-4" aria-hidden />
+                  </ButtonLink>
+                  {practiceDoneToday ? (
+                    <span className="rounded-full bg-success-bg px-3 py-1.5 text-xs font-bold text-success">Feita hoje</span>
                   ) : null}
                 </div>
               </article>
             </StaggerItem>
           ) : null}
 
-          {suggestedPlan ? (
+          {nextPlan ? (
             <StaggerItem>
-              <Link
-                href={`/planos/${suggestedPlan.slug}`}
-                transitionTypes={["nav-forward"]}
-                className="group block rounded-card"
-              >
-                <Card className="flex items-center gap-4 p-4 group-hover:-translate-y-0.5 group-hover:shadow-lift">
+              <Link href={`/planos/${nextPlan.slug}`} transitionTypes={["nav-forward"]} className="group block rounded-card">
+                <Card className="flex items-center gap-3.5 p-[clamp(8px,1.8dvh,16px)] group-hover:-translate-y-0.5 group-hover:shadow-lift">
                   <span
                     aria-hidden
-                    className="size-16 shrink-0 rounded-2xl transition-transform duration-[600ms] ease-out-expo group-hover:scale-105"
-                    style={{ background: planPalette(suggestedPlan.palette) }}
+                    className="size-[clamp(44px,7dvh,64px)] shrink-0 rounded-2xl transition-transform duration-[600ms] ease-out-expo group-hover:scale-105"
+                    style={{ background: planPalette(nextPlan.palette) }}
                   />
-                  <span className="flex min-w-0 flex-1 flex-col gap-1">
-                    <span className="eyebrow text-lav-700">Um plano para este momento</span>
-                    <span className="text-[17px] font-bold text-ink">{suggestedPlan.title}</span>
-                    <span className="flex items-center gap-3 text-xs text-muted">
-                      <span className="inline-flex items-center gap-1">
-                        <CalendarDays className="size-3.5" aria-hidden /> {suggestedPlan.progress.totalDays} dias
-                      </span>
-                      <span className="inline-flex items-center gap-1">
-                        <Clock className="size-3.5" aria-hidden /> {suggestedPlan.minutes_per_day}
-                      </span>
+                  <span className="flex min-w-0 flex-1 flex-col gap-[clamp(1px,0.5dvh,4px)]">
+                    <span className="eyebrow text-lav-700">
+                      {isContinuing ? "Continue sua jornada" : "Um plano para este momento"}
                     </span>
+                    <span className="truncate text-[16px] font-bold text-ink">{nextPlan.title}</span>
+                    {isContinuing ? (
+                      <span className="flex items-center gap-2">
+                        <ProgressBar percent={nextPlan.progress.percent} label={`Progresso em ${nextPlan.title}`} className="flex-1" />
+                        <span className="tabular shrink-0 text-[11px] font-bold text-muted">
+                          {nextPlan.progress.completedDays}/{nextPlan.progress.totalDays} dias
+                        </span>
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-3 text-xs text-muted">
+                        <span className="inline-flex items-center gap-1">
+                          <CalendarDays className="size-3.5" aria-hidden /> {nextPlan.progress.totalDays} dias
+                        </span>
+                        <span className="inline-flex items-center gap-1">
+                          <Clock className="size-3.5" aria-hidden /> {nextPlan.minutes_per_day}
+                        </span>
+                      </span>
+                    )}
                   </span>
                   <ArrowRight className="size-5 shrink-0 text-muted group-hover:translate-x-1 group-hover:text-ink" aria-hidden />
                 </Card>
               </Link>
             </StaggerItem>
           ) : null}
-
-          {inProgress.length > 0 ? (
-            <StaggerItem className="flex flex-col gap-3">
-              <h2 className="pt-2 text-[17px] font-bold text-ink">Continue sua jornada</h2>
-              {inProgress.map((plan) => (
-                <Link
-                  key={plan.slug}
-                  href={`/planos/${plan.slug}`}
-                  transitionTypes={["nav-forward"]}
-                  className="group block rounded-card"
-                >
-                  <Card className="flex flex-col gap-3 p-4 group-hover:-translate-y-0.5 group-hover:shadow-lift">
-                    <div className="flex items-center justify-between gap-3">
-                      <span className="font-bold text-ink">{plan.title}</span>
-                      <span className="tabular shrink-0 text-xs font-semibold text-muted">
-                        Dia {plan.progress.completedDays} de {plan.progress.totalDays}
-                      </span>
-                    </div>
-                    <ProgressBar percent={plan.progress.percent} label={`Progresso em ${plan.title}`} />
-                  </Card>
-                </Link>
-              ))}
-            </StaggerItem>
-          ) : null}
-
-          <StaggerItem className="flex justify-center pt-2">
-            <DemoBadge />
-          </StaggerItem>
         </Stagger>
       </section>
       <FlashToast key={flash ?? "none"} message={flash} />

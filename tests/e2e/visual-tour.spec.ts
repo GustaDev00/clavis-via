@@ -21,6 +21,7 @@ test("passeio visual pelas telas", async ({ page }) => {
   await shot("03-check-in-erro");
 
   await page.getByRole("radio", { name: "Ansiedade" }).click();
+  await page.getByRole("button", { name: /Adicionar uma nota/ }).click();
   await page.getByRole("textbox").fill("Muita coisa ao mesmo tempo no trabalho.");
   await page.waitForTimeout(500);
   await shot("04-check-in-selecionado");

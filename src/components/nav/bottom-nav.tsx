@@ -23,7 +23,7 @@ export function BottomNav() {
     <nav
       aria-label="Navegação principal"
       style={{ viewTransitionName: "app-nav" }}
-      className="fixed inset-x-0 bottom-0 z-40 mx-auto w-full max-w-[var(--app-max)] px-4 pb-[max(env(safe-area-inset-bottom),12px)]"
+      className="fixed inset-x-0 bottom-0 z-40 mx-auto w-full max-w-[var(--app-max)] px-4 pb-[max(env(safe-area-inset-bottom),10px)]"
     >
       <LayoutGroup id="bottom-nav">
         <ul className="flex h-[var(--nav-height)] items-center justify-between rounded-[28px] border border-white/80 bg-surface/80 px-2 shadow-float backdrop-blur-xl">
@@ -35,7 +35,7 @@ export function BottomNav() {
                   href={href}
                   transitionTypes={["nav-tab"]}
                   aria-current={active ? "page" : undefined}
-                  className="relative mx-auto flex h-14 w-full max-w-[84px] flex-col items-center justify-center gap-1 rounded-2xl active:scale-95"
+                  className="relative mx-auto flex h-[54px] w-full max-w-[84px] flex-col items-center justify-center gap-1 rounded-2xl active:scale-95"
                 >
                   {active ? (
                     <motion.span

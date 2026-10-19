@@ -28,7 +28,7 @@ export function EnterDemoForm() {
   }
 
   return (
-    <form action={formAction} onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+    <form action={formAction} onSubmit={handleSubmit} noValidate className="flex flex-col gap-[clamp(8px,1.6dvh,16px)]">
       <div data-intro-step>
         <TextField
           name="displayName"
@@ -44,6 +44,7 @@ export function EnterDemoForm() {
           hint="Sem cadastro: usamos só para te cumprimentar."
           error={error}
           errorKey={attempt + (state.status === "error" ? state.attempt : 0)}
+          className="h-[clamp(48px,7dvh,56px)]"
         />
       </div>
 
@@ -52,21 +53,29 @@ export function EnterDemoForm() {
         attempt={state.status === "error" ? state.attempt : 0}
       />
 
-      <div data-intro-step className="flex flex-col gap-3">
-        <Button type="submit" size="lg" pending={pending} pendingLabel="Preparando sua demonstração…">
+      <div data-intro-step>
+        <Button
+          type="submit"
+          size="lg"
+          pending={pending}
+          pendingLabel="Preparando sua demonstração…"
+          className="h-[clamp(48px,7dvh,56px)]"
+        >
           Entrar como visitante demo
           <ArrowRight className="size-4 transition-transform duration-[var(--dur-micro)] group-hover/button:translate-x-0.5" aria-hidden />
         </Button>
-        <p className="flex items-center justify-center gap-1.5 text-center text-xs leading-5 text-muted">
-          <ShieldCheck className="size-3.5 shrink-0" aria-hidden />
-          Ambiente de demonstração · use apenas dados fictícios
-        </p>
       </div>
 
-      <p data-intro-step className="text-center text-[11px] leading-4 text-muted">
-        O CLAVIS VIA não substitui acompanhamento psicológico ou médico. Se precisar de apoio agora, o CVV atende
-        24h pelo <strong className="font-semibold text-text-soft">188</strong> ou em cvv.org.br.
-      </p>
+      <div data-intro-step className="flex flex-col items-center gap-0.5 text-center text-[11px] leading-4 text-muted">
+        <p className="flex items-center gap-1.5">
+          <ShieldCheck className="size-3.5 shrink-0" aria-hidden />
+          Demonstração · use apenas dados fictícios
+        </p>
+        <p>
+          Não substitui acompanhamento profissional. Apoio 24h:{" "}
+          <strong className="font-semibold text-text-soft">CVV 188</strong>
+        </p>
+      </div>
     </form>
   );
 }

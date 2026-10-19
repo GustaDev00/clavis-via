@@ -37,7 +37,7 @@ export default async function PlanDayPage({ params }: Props) {
 
   return (
     <PageTransition>
-      <section className="flex flex-col gap-6 pt-2">
+      <section className="flex flex-col gap-[clamp(14px,3dvh,24px)] pt-2">
         <BackLink href={`/planos/${plan.slug}`} label={plan.title} />
 
         <header className="flex flex-col gap-3">
@@ -46,7 +46,7 @@ export default async function PlanDayPage({ params }: Props) {
               Dia {dayNumber} de {plan.progress.totalDays}
             </p>
           </Reveal>
-          <RevealHeading className="type-display text-[40px] text-ink">{planDay.title}</RevealHeading>
+          <RevealHeading className="type-display text-[clamp(30px,5.4dvh,40px)] text-ink">{planDay.title}</RevealHeading>
           <Reveal delay={0.2}>
             <p className="text-[15px] text-text-soft">{planDay.subtitle}</p>
           </Reveal>
@@ -54,12 +54,12 @@ export default async function PlanDayPage({ params }: Props) {
 
         {status === "locked" ? (
           <Reveal delay={0.3}>
-            <Card className="flex flex-col items-start gap-4 p-6">
-              <span className="grid size-12 place-items-center rounded-full bg-sunken text-muted">
+            <Card className="flex flex-col items-start gap-[clamp(10px,2dvh,16px)] p-[clamp(16px,3dvh,24px)]">
+              <span className="grid size-[clamp(40px,6dvh,48px)] place-items-center rounded-full bg-sunken text-muted">
                 <Lock className="size-5" aria-hidden />
               </span>
               <div className="flex flex-col gap-1.5">
-                <h2 className="type-display text-[26px] text-ink">Este dia ainda está fechado</h2>
+                <h2 className="type-display text-[clamp(22px,3.8dvh,26px)] text-ink">Este dia ainda está fechado</h2>
                 <p className="text-[15px] leading-6 text-text-soft">
                   Os dias abrem em sequência. Conclua o dia {dayNumber - 1} para liberar este.
                 </p>

@@ -49,7 +49,10 @@ export function EmotionPicker({ value, onChange, invalid, describedBy, labelledB
       animate="visible"
       variants={{ hidden: {}, visible: { transition: { staggerChildren: STAGGER.tiles, delayChildren: 0.25 } } }}
       className={cn(
-        "grid grid-cols-2 gap-2.5 rounded-[30px] p-1 min-[360px]:grid-cols-6",
+        // Altura das linhas acompanha a altura da tela, com mínimo confortável para o toque
+        "grid gap-[clamp(6px,1.2dvh,10px)] rounded-[30px] p-1",
+        "grid-cols-2 grid-rows-[repeat(4,clamp(52px,8.4dvh,104px))]",
+        "min-[360px]:grid-cols-6 min-[360px]:grid-rows-[repeat(3,clamp(56px,10.6dvh,124px))]",
         "transition-shadow duration-[var(--dur-meso)]",
         invalid && "shadow-[0_0_0_2px_rgb(201_80_108/0.45)]",
       )}
@@ -75,7 +78,7 @@ export function EmotionPicker({ value, onChange, invalid, describedBy, labelledB
             }}
             whileTap={{ scale: 0.96 }}
             className={cn(
-              "group relative flex aspect-[1/1.02] flex-col items-center justify-center gap-2 rounded-tile",
+              "group relative flex h-full flex-col items-center justify-center gap-[clamp(4px,0.9dvh,8px)] rounded-tile",
               "border border-white/80 bg-surface/75 px-1.5 text-center shadow-soft backdrop-blur",
               "hover:-translate-y-0.5 hover:shadow-lift focus-visible:outline-offset-2",
               // 3 por linha; a última linha (2 itens) fica centralizada
@@ -107,7 +110,7 @@ export function EmotionPicker({ value, onChange, invalid, describedBy, labelledB
               animate={{ scale: selected ? 1.08 : 1, y: selected ? -2 : 0 }}
               transition={SPRING.select}
             >
-              <EmotionFace emotion={emotion.id} className="size-12" />
+              <EmotionFace emotion={emotion.id} className="size-[clamp(30px,5.6dvh,48px)]" />
               {selected ? (
                 <motion.span
                   initial={{ scale: 0.4, opacity: 0 }}

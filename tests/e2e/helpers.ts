@@ -20,9 +20,19 @@ export async function enterAsDemo(page: Page, name?: string) {
 export async function checkIn(page: Page, emotion: string, note?: string) {
   if (!page.url().endsWith("/check-in")) await page.goto("/check-in");
   await page.getByRole("radio", { name: emotion }).click();
-  if (note !== undefined) await page.getByRole("textbox").fill(note);
+  if (note !== undefined) {
+    await openNote(page);
+    await page.getByRole("textbox").fill(note);
+  }
   await page.getByRole("button", { name: "Salvar check-in" }).click();
   await expect(page).toHaveURL(/\/hoje/);
+}
+
+/** Abre o campo de nota do check-in (recolhido por padrão; "Outro" já abre sozinho). */
+export async function openNote(page: Page) {
+  const add = page.getByRole("button", { name: /Adicionar uma nota/ });
+  if (await add.isVisible()) await add.click();
+  await expect(page.getByRole("textbox")).toBeVisible();
 }
 
 /** Garante que não há rolagem horizontal (nada estourou a largura da tela). */

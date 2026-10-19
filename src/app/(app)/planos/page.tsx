@@ -32,7 +32,7 @@ export default async function PlansPage() {
           <Reveal>
             <p className="eyebrow text-lav-700">Planos temáticos</p>
           </Reveal>
-          <RevealHeading className="type-display text-[40px] text-ink">Um passo por dia</RevealHeading>
+          <RevealHeading className="type-display text-[clamp(30px,5.4dvh,40px)] text-ink">Um passo por dia</RevealHeading>
           <Reveal delay={0.25} className="flex flex-col items-start gap-3">
             <p className="text-[15px] leading-6 text-text-soft">
               Planos curtos, com uma mensagem, uma ação pequena e um espaço para você registrar como foi.

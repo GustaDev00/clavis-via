@@ -13,7 +13,7 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
     <div className="mx-auto flex min-h-dvh w-full max-w-[var(--app-max)] flex-col">
       <header
         style={{ viewTransitionName: "app-header" }}
-        className="sticky top-0 z-40 flex items-center justify-between bg-bg/70 px-5 pt-[max(env(safe-area-inset-top),14px)] pb-3 backdrop-blur-xl"
+        className="sticky top-0 z-40 flex h-[var(--app-header)] items-center justify-between bg-bg/70 px-5 pt-[max(env(safe-area-inset-top),10px)] backdrop-blur-xl"
       >
         <Link href="/hoje" transitionTypes={["nav-tab"]} aria-label="CLAVIS VIA, ir para Hoje" className="rounded-full">
           <Logo />

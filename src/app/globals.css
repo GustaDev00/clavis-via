@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Variantes por ALTURA da tela: o layout mobile se ajusta ao espaço vertical real do aparelho */
+@custom-variant short (@media (max-height: 700px));
+@custom-variant xshort (@media (max-height: 660px));
+@custom-variant tall (@media (min-height: 780px));
+
 /*
  * CLAVIS VIA — design system
  * Direção: branco, azul pastel, lavanda e rosa claro, com navy para ações.
@@ -111,7 +116,10 @@
   --grad-progress: linear-gradient(90deg, #8e7fd0 0%, #7fa3d9 100%);
 
   --app-max: 440px;
-  --nav-height: 76px;
+  --nav-height: 68px;
+  /* Altura do cabeçalho do app (conteúdo 40px + respiro) e espaço reservado para a navegação flutuante */
+  --app-header: calc(50px + max(env(safe-area-inset-top), 10px));
+  --app-footer: calc(var(--nav-height) + max(env(safe-area-inset-bottom), 10px) + 14px);
 
   color-scheme: light;
   -webkit-tap-highlight-color: transparent;
@@ -206,7 +214,21 @@
 }
 
 @utility pb-safe {
-  padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + 24px);
+  padding-bottom: var(--app-footer);
+}
+
+/*
+ * Tela que ocupa exatamente a altura visível (100dvh menos cabeçalho e navegação), sem scroll.
+ * Os filhos com flex-1 preenchem o espaço; abaixo de 400px de altura útil (celular deitado) a tela rola.
+ */
+@utility screen-fit {
+  display: flex;
+  flex-direction: column;
+  /*
+   * min-height (e não height): se o conteúdo crescer (ex.: nota aberta), a tela rola em vez de cortar.
+   * Teto de 680px: nos celulares não interfere (a área útil é menor); em tablet/desktop evita esticar demais.
+   */
+  min-height: max(400px, min(680px, calc(100dvh - var(--app-header) - var(--app-footer))));
 }
 
 /* Esqueleto de carregamento: brilho por transform (barato) e sem movimento no modo reduzido */

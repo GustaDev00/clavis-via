@@ -45,12 +45,16 @@ export default async function PracticePage({ params }: PageProps<"/hoje/pratica/
               Prática de hoje · {PRACTICE_KIND_LABEL[practice.kind]}
             </p>
           </Reveal>
-          <RevealHeading className="type-display text-[40px] text-ink">{practice.title}</RevealHeading>
+          <RevealHeading className="type-display text-[clamp(30px,5.4dvh,40px)] text-ink">{practice.title}</RevealHeading>
           <Reveal delay={0.2} className="flex flex-col gap-3">
             <p className="flex items-center gap-1.5 text-sm font-semibold text-text-soft">
               <Clock className="size-4" aria-hidden /> {practice.duration_minutes} minutos
             </p>
             <p className="text-[15px] leading-6 text-text-soft">{practice.summary}</p>
+            <blockquote className="border-l-2 border-lav-300 pl-4">
+              <p className="eyebrow text-lav-700">{practice.key_title}</p>
+              <p className="type-display pt-1 text-[20px] leading-[1.35] text-text italic">{practice.key_message}</p>
+            </blockquote>
           </Reveal>
         </header>
 
@@ -66,18 +70,21 @@ export default async function PracticePage({ params }: PageProps<"/hoje/pratica/
           <StaggerItem>
             <h2 className="text-[17px] font-bold text-ink">Passo a passo</h2>
           </StaggerItem>
-          <ol className="flex flex-col gap-3">
-            {practice.steps.map((step, index) => (
-              <StaggerItem key={step}>
-                <li className="flex gap-3.5 rounded-2xl bg-surface/70 p-4 shadow-soft">
-                  <span className="tabular grid size-8 shrink-0 place-items-center rounded-full bg-[image:var(--grad-aurora)] text-sm font-bold text-ink">
-                    {index + 1}
-                  </span>
-                  <p className="pt-1 text-[15px] leading-6 text-text">{step}</p>
-                </li>
-              </StaggerItem>
-            ))}
-          </ol>
+          {/* Um único cartão com divisórias: mais leve e bem mais compacto que um cartão por passo */}
+          <Card className="px-4">
+            <ol className="divide-y divide-line/70">
+              {practice.steps.map((step, index) => (
+                <StaggerItem key={step}>
+                  <li className="flex gap-3 py-3">
+                    <span className="tabular grid size-7 shrink-0 place-items-center rounded-full bg-[image:var(--grad-aurora)] text-[13px] font-bold text-ink">
+                      {index + 1}
+                    </span>
+                    <p className="pt-0.5 text-[15px] leading-6 text-text">{step}</p>
+                  </li>
+                </StaggerItem>
+              ))}
+            </ol>
+          </Card>
           <StaggerItem className="flex justify-center pt-1">
             <DemoBadge />
           </StaggerItem>

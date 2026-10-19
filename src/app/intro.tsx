@@ -71,36 +71,42 @@ export function Intro({ pillars, children }: { pillars: ReactNode; children: Rea
   );
 
   return (
-    <div ref={scope} data-intro="pending" className="group/intro flex flex-1 flex-col">
+    <div ref={scope} data-intro="pending" className="group/intro flex min-h-0 flex-1 flex-col">
       <noscript>
         <style>{`[data-intro-hero],[data-intro-pillar],[data-intro-step]{visibility:visible!important;opacity:1!important}`}</style>
       </noscript>
 
+      {/* O bloco da marca absorve o espaço livre (flex-1) e as medidas acompanham a altura da tela */}
       <div
         data-intro-hero
-        className="flex flex-col items-center gap-5 pt-6 text-center group-data-[intro=pending]/intro:invisible"
+        className="flex min-h-0 flex-1 flex-col items-center justify-center gap-[clamp(8px,1.8dvh,20px)] text-center group-data-[intro=pending]/intro:invisible"
       >
         <div data-intro-key className="relative">
-          <span aria-hidden className="absolute inset-[-28px] rounded-full bg-lav-200/60 blur-2xl" />
-          <KeyMark className="relative h-24 w-auto" />
+          <span aria-hidden className="absolute inset-[-28%] rounded-full bg-lav-200/60 blur-2xl" />
+          <KeyMark className="relative h-[clamp(52px,11.5dvh,120px)] w-auto" />
         </div>
-        <h1 className="flex flex-col items-center gap-1 text-ink" aria-label="CLAVIS VIA">
+        <h1 className="flex flex-col items-center gap-[0.08em] text-[clamp(30px,6.6dvh,60px)] text-ink" aria-label="CLAVIS VIA">
           {/* padding-left compensa o letter-spacing depois da última letra e centraliza a palavra */}
-          <span data-intro-wordmark className="type-display pl-[0.22em] text-[52px] leading-none tracking-[0.22em]">
+          <span data-intro-wordmark className="type-display pl-[0.22em] leading-none tracking-[0.22em]">
             CLAVIS
           </span>
-          <span data-intro-wordmark className="type-display pl-[0.22em] text-[52px] leading-none tracking-[0.22em]">
+          <span data-intro-wordmark className="type-display pl-[0.22em] leading-none tracking-[0.22em]">
             VIA
           </span>
         </h1>
-        <p data-intro-tagline className="type-display max-w-[16ch] text-[26px] leading-[1.15] text-text-soft italic">
+        <p
+          data-intro-tagline
+          className="type-display max-w-[20ch] text-[clamp(18px,3.2dvh,26px)] leading-[1.15] text-text-soft italic"
+        >
           Seu caminho de volta para si, todos os dias.
         </p>
       </div>
 
-      <ul className="mt-10 flex flex-col gap-4 group-data-[intro=pending]/intro:invisible">{pillars}</ul>
+      <ul className="mt-[clamp(12px,3dvh,36px)] grid grid-cols-3 gap-2 group-data-[intro=pending]/intro:invisible">
+        {pillars}
+      </ul>
 
-      <div className="mt-auto flex flex-col gap-4 pt-10 group-data-[intro=pending]/intro:invisible">{children}</div>
+      <div className="mt-[clamp(14px,3dvh,36px)] flex flex-col group-data-[intro=pending]/intro:invisible">{children}</div>
     </div>
   );
 }

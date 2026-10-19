@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { enterAsDemo, visitorName } from "./helpers";
+import { enterAsDemo, openNote, visitorName } from "./helpers";
 
 /**
  * O fluxo obrigatório do desafio, passo a passo:
@@ -18,6 +18,7 @@ test("fluxo de ponta a ponta com persistência após recarregar", async ({ page 
   await test.step("2. check-in com ansiedade", async () => {
     await page.getByRole("radio", { name: "Ansiedade" }).click();
     await expect(page.getByRole("radio", { name: "Ansiedade" })).toHaveAttribute("aria-checked", "true");
+    await openNote(page);
     await page.getByRole("textbox").fill(note);
     await page.getByRole("button", { name: "Salvar check-in" }).click();
     await expect(page).toHaveURL(/\/hoje/);
@@ -25,7 +26,7 @@ test("fluxo de ponta a ponta com persistência após recarregar", async ({ page 
   });
 
   await test.step("3. Hoje traz reflexão e prática coerentes com a ansiedade", async () => {
-    await expect(page.getByRole("heading", { level: 1 })).toContainText(name);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(name.split(" ")[0]);
     await expect(page.getByText("Você chegou com")).toBeVisible();
     await expect(page.getByText("Ansiedade", { exact: true })).toBeVisible();
     await expect(page.getByText("Sua chave de hoje")).toBeVisible();

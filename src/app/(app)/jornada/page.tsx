@@ -42,7 +42,7 @@ export default async function JourneyPage() {
           <Reveal>
             <p className="eyebrow text-lav-700">Minha jornada</p>
           </Reveal>
-          <RevealHeading className="type-display text-[40px] text-ink">O caminho que você vem fazendo</RevealHeading>
+          <RevealHeading className="type-display text-[clamp(30px,5.4dvh,40px)] text-ink">O caminho que você vem fazendo</RevealHeading>
         </header>
 
         <Stagger delay={0.25} className="flex flex-col gap-4">
