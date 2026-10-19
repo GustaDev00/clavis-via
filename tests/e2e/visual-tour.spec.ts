@@ -2,11 +2,11 @@ import { test } from "@playwright/test";
 import { enterAsDemo, settle } from "./helpers";
 
 /**
- * Passeio visual: captura cada tela no celular (test-results/tour/*.png) para revisão.
+ * Passeio visual: captura cada tela no celular (viewport, como a pessoa vê) em test-results/tour/*.png.
  * Não faz asserções de pixel — serve para conferir o design a cada mudança.
  */
 test("passeio visual pelas telas", async ({ page }) => {
-  const shot = (name: string) => page.screenshot({ path: `test-results/tour/${name}.png`, fullPage: true });
+  const shot = (name: string) => page.screenshot({ path: `test-results/tour/${name}.png` });
 
   await page.goto("/");
   await settle(page, 3200);
