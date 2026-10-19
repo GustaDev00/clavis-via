@@ -25,7 +25,8 @@ export function BreathingGuide({ phases }: { phases: BreathPhase[] }) {
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
-      mm.add({ reduce: "(prefers-reduced-motion: reduce)" }, (context) => {
+      // As duas condições são necessárias: o matchMedia só chama o callback quando alguma é verdadeira
+      mm.add({ motion: "(prefers-reduced-motion: no-preference)", reduce: "(prefers-reduced-motion: reduce)" }, (context) => {
         const reduce = Boolean(context.conditions?.reduce);
         const orb = "[data-orb]";
         const glow = "[data-glow]";
@@ -38,7 +39,7 @@ export function BreathingGuide({ phases }: { phases: BreathPhase[] }) {
         for (const item of phases) {
           tl.call(() => setPhase(item));
           if (item.key === "inspire") {
-            tl.to(orb, { scale: reduce ? 1 : 1, duration: item.seconds, ease: "sine.inOut" }, "<");
+            tl.to(orb, { scale: 1, duration: item.seconds, ease: "sine.inOut" }, "<");
             tl.to(glow, { opacity: 0.9, scale: reduce ? 1 : 1.15, duration: item.seconds, ease: "sine.inOut" }, "<");
           } else if (item.key === "solte") {
             tl.to(orb, { scale: reduce ? 1 : 0.62, duration: item.seconds, ease: "sine.inOut" }, "<");

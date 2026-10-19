@@ -49,18 +49,10 @@ test.describe("com sessão", () => {
     await expect(page).toHaveURL(/\/check-in$/);
   });
 
-  test("prática do dia: respiração guiada, concluir e voltar", async ({ page }) => {
+  test("prática do dia: concluir e ver na jornada", async ({ page }) => {
     await checkIn(page, "Ansiedade");
     await page.getByRole("link", { name: /Ver prática de hoje/ }).click();
     await expect(page).toHaveURL(/\/hoje\/pratica\//);
-
-    const breathe = page.getByRole("button", { name: /Começar a respirar/ });
-    if (await breathe.isVisible()) {
-      await breathe.click();
-      await expect(page.getByRole("button", { name: /Pausar/ })).toBeVisible();
-      await page.getByRole("button", { name: /Pausar/ }).click();
-      await expect(page.getByRole("button", { name: /Continuar/ })).toBeVisible();
-    }
 
     await page.getByRole("button", { name: "Concluí esta prática" }).click();
     await expect(page).toHaveURL(/\/hoje/);
@@ -70,6 +62,28 @@ test.describe("com sessão", () => {
     await page.goto("/jornada");
     await expect(page.getByText("Práticas feitas")).toBeVisible();
   });
+
+  test("respiração guiada: o círculo cresce ao inspirar e a fase é anunciada", async ({ page }) => {
+    await page.goto("/hoje/pratica/respiracao-quadrada");
+    const orb = page.locator("[data-orb]");
+    const scale = () => orb.evaluate((element) => new DOMMatrix(getComputedStyle(element).transform).a);
+
+    await expect.poll(scale).toBeCloseTo(0.62, 1);
+    await page.getByRole("button", { name: "Começar a respirar" }).click();
+    await expect(page.getByText("Inspire", { exact: true })).toBeVisible();
+    await expect.poll(scale, { timeout: 5000 }).toBeGreaterThan(0.9);
+
+    await page.getByRole("button", { name: "Pausar" }).click();
+    await expect(page.getByRole("button", { name: "Continuar" })).toBeVisible();
+  });
+
+  test("prática sem respiração guiada não mostra o círculo", async ({ page }) => {
+    await page.goto("/hoje/pratica/um-pequeno-passo");
+    await expect(page.getByRole("heading", { name: "Um pequeno passo" })).toBeVisible();
+    await expect(page.locator("[data-orb]")).toHaveCount(0);
+    await expect(page.getByRole("main").getByRole("listitem")).toHaveCount(4);
+  });
+
 
   test("links de voltar levam ao nível anterior", async ({ page }) => {
     await page.goto("/planos/voz-e-limites/dia/1");
