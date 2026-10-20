@@ -17,6 +17,11 @@ Protótipo **mobile-first** do desafio técnico CLAVIS VIA: a pessoa entra como 
   <img src="docs/telas/11-jornada.png" width="180" alt="Minha jornada" />
 </p>
 
+<p align="center">
+  <img src="docs/telas-grandes/desktop-hoje.png" width="440" alt="Hoje no desktop" />
+  <img src="docs/telas-grandes/desktop-planos.png" width="440" alt="Planos no desktop" />
+</p>
+
 ---
 
 ## Roteiro da demonstração (≈ 2 minutos)
