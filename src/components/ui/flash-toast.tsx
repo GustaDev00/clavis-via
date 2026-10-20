@@ -24,7 +24,7 @@ export function FlashToast({ message }: { message: string | null }) {
   }, [message]);
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-[calc(var(--nav-height)+env(safe-area-inset-bottom)+16px)] z-50 flex justify-center px-5">
+    <div className="pointer-events-none fixed inset-x-0 bottom-[calc(var(--nav-height)+env(safe-area-inset-bottom)+16px)] z-50 flex justify-center px-5 md:bottom-8 md:left-[96px] lg:left-[256px]">
       <AnimatePresence>
         {visible && message ? (
           <motion.div

@@ -182,7 +182,7 @@ export function CheckInForm({ headingId }: { headingId: string }) {
         size="lg"
         pending={pending}
         pendingLabel="Salvando seu check-in…"
-        className="h-[clamp(48px,7dvh,56px)] shrink-0 shadow-lift"
+        className="h-[clamp(48px,7dvh,56px)] shrink-0 shadow-lift md:mx-auto md:w-auto md:min-w-[320px] md:px-10"
       >
         Salvar check-in
       </Button>

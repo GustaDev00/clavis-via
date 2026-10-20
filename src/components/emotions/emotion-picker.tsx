@@ -54,6 +54,7 @@ export function EmotionPicker({ value, onChange, invalid, describedBy, labelledB
         "transition-[grid-template-rows,box-shadow] duration-[var(--dur-meso)] ease-out-soft",
         "grid-cols-2 grid-rows-[repeat(4,clamp(52px,8.4dvh,104px))]",
         "min-[360px]:grid-cols-6 min-[360px]:grid-rows-[repeat(3,clamp(56px,10.6dvh,124px))]",
+        "lg:grid-cols-4 lg:grid-rows-[repeat(2,clamp(132px,18dvh,176px))] lg:gap-4",
         // Nota aberta (CheckInForm): linhas mais baixas, com transição suave
         "group-data-[note=open]/checkin:grid-rows-[repeat(4,clamp(46px,6.6dvh,88px))]",
         "min-[360px]:group-data-[note=open]/checkin:grid-rows-[repeat(3,clamp(46px,7.4dvh,96px))]",
@@ -86,8 +87,8 @@ export function EmotionPicker({ value, onChange, invalid, describedBy, labelledB
               "border border-white/80 bg-surface/75 px-1.5 text-center shadow-soft backdrop-blur",
               "hover:-translate-y-0.5 hover:shadow-lift focus-visible:outline-offset-2",
               // 3 por linha; a última linha (2 itens) fica centralizada
-              "min-[360px]:col-span-2",
-              index === 6 && "min-[360px]:col-start-2",
+              "min-[360px]:col-span-2 lg:col-span-1",
+              index === 6 && "min-[360px]:col-start-2 lg:col-start-auto",
             )}
           >
             {/* Fundo da emoção: anima a opacidade da camada, nunca o gradiente */}
@@ -116,7 +117,7 @@ export function EmotionPicker({ value, onChange, invalid, describedBy, labelledB
             >
               <EmotionFace
                 emotion={emotion.id}
-                className="size-[clamp(30px,5.6dvh,48px)] transition-[width,height] duration-[var(--dur-meso)] ease-out-soft group-data-[note=open]/checkin:size-[clamp(26px,4.2dvh,40px)] xshort:group-data-[note=open]/checkin:size-6"
+                className="size-[clamp(30px,5.6dvh,48px)] transition-[width,height] duration-[var(--dur-meso)] ease-out-soft group-data-[note=open]/checkin:size-[clamp(26px,4.2dvh,40px)] xshort:group-data-[note=open]/checkin:size-6 lg:size-16 lg:group-data-[note=open]/checkin:size-14"
               />
               {selected ? (
                 <motion.span

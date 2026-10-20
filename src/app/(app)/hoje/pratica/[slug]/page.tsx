@@ -36,16 +36,16 @@ export default async function PracticePage({ params }: PageProps<"/hoje/pratica/
 
   return (
     <PageTransition>
-      <section className="flex flex-col gap-6 pt-2">
+      <section className="flex flex-col gap-6 pt-2 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(340px,0.85fr)] lg:gap-x-12 lg:gap-y-8">
         <BackLink href="/hoje" label="Hoje" />
 
-        <header className="flex flex-col gap-3">
+        <header className="flex flex-col gap-3 lg:col-start-1 lg:row-start-2">
           <Reveal>
             <p className="eyebrow flex items-center gap-2 text-lav-700">
               Prática de hoje · {PRACTICE_KIND_LABEL[practice.kind]}
             </p>
           </Reveal>
-          <RevealHeading className="type-display text-[clamp(30px,5.4dvh,40px)] text-ink">{practice.title}</RevealHeading>
+          <RevealHeading className="type-display text-[clamp(30px,5.4dvh,40px)] text-ink lg:text-[52px]">{practice.title}</RevealHeading>
           <Reveal delay={0.2} className="flex flex-col gap-3">
             <p className="flex items-center gap-1.5 text-sm font-semibold text-text-soft">
               <Clock className="size-4" aria-hidden /> {practice.duration_minutes} minutos
@@ -59,14 +59,14 @@ export default async function PracticePage({ params }: PageProps<"/hoje/pratica/
         </header>
 
         {phases.length > 0 ? (
-          <Reveal delay={0.35}>
-            <Card className="px-4">
+          <Reveal delay={0.35} className="lg:sticky lg:top-10 lg:col-start-2 lg:row-span-3 lg:row-start-2 lg:self-start">
+            <Card className="px-4 lg:py-6">
               <BreathingGuide phases={phases} />
             </Card>
           </Reveal>
         ) : null}
 
-        <Stagger delay={0.45} className="flex flex-col gap-3">
+        <Stagger delay={0.45} className="flex flex-col gap-3 lg:col-start-1">
           <StaggerItem>
             <h2 className="text-[17px] font-bold text-ink">Passo a passo</h2>
           </StaggerItem>
@@ -90,7 +90,7 @@ export default async function PracticePage({ params }: PageProps<"/hoje/pratica/
           </StaggerItem>
         </Stagger>
 
-        <Reveal delay={0.6}>
+        <Reveal delay={0.6} className="lg:col-start-1">
           <CompletePracticeForm practiceSlug={practice.slug} checkInId={checkIn?.id ?? null} doneToday={doneToday} />
         </Reveal>
       </section>

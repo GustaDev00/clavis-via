@@ -83,7 +83,7 @@ export function Intro({ pillars, children }: { pillars: ReactNode; children: Rea
   );
 
   return (
-    <div ref={scope} data-intro="pending" className="group/intro flex min-h-0 flex-1 flex-col">
+    <div ref={scope} data-intro="pending" className="group/intro flex min-h-0 flex-1 flex-col lg:grid lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-16">
       <noscript>
         <style>{`[data-intro-hero],[data-intro-pillar],[data-intro-step]{visibility:visible!important;opacity:1!important}`}</style>
       </noscript>
@@ -91,7 +91,7 @@ export function Intro({ pillars, children }: { pillars: ReactNode; children: Rea
       {/* O bloco da marca absorve o espaço livre (flex-1) e as medidas acompanham a altura da tela */}
       <div
         data-intro-hero
-        className="flex min-h-0 flex-1 flex-col items-center justify-center gap-[clamp(8px,1.8dvh,20px)] text-center group-data-[intro=pending]/intro:invisible"
+        className="flex min-h-0 flex-1 flex-col items-center justify-center gap-[clamp(8px,1.8dvh,20px)] text-center group-data-[intro=pending]/intro:invisible lg:items-start lg:text-left"
       >
         <div data-intro-key className="relative">
           {/* A única luz da tela: um halo atrás da fechadura */}
@@ -102,9 +102,9 @@ export function Intro({ pillars, children }: { pillars: ReactNode; children: Rea
           {/* Fechadura em vidro: arco no topo, base reta — a única superfície de vidro da tela */}
           <div
             data-intro-keyhole
-            className="relative overflow-hidden rounded-t-full rounded-b-[26%] border border-white/70 bg-white/45 px-[clamp(14px,3dvh,30px)] pt-[clamp(14px,3dvh,30px)] pb-[clamp(10px,2.2dvh,22px)] shadow-[0_18px_40px_-20px_rgb(24_47_88/0.35)] backdrop-blur-[14px]"
+            className="relative overflow-hidden rounded-t-full rounded-b-[26%] border border-white/70 bg-white/45 px-[clamp(14px,3dvh,30px)] pt-[clamp(14px,3dvh,30px)] pb-[clamp(10px,2.2dvh,22px)] shadow-[0_18px_40px_-20px_rgb(24_47_88/0.35)] backdrop-blur-[14px] lg:px-10 lg:pt-10 lg:pb-7"
           >
-            <KeyMark className="relative h-[clamp(48px,10.4dvh,108px)] w-auto" />
+            <KeyMark className="relative h-[clamp(48px,10.4dvh,108px)] w-auto lg:h-[150px]" />
             {/* Varredura de luz: passa uma vez ao carregar */}
             <span
               data-intro-sweep
@@ -113,7 +113,7 @@ export function Intro({ pillars, children }: { pillars: ReactNode; children: Rea
             />
           </div>
         </div>
-        <h1 className="flex flex-col items-center gap-[0.08em] text-[clamp(30px,6.2dvh,56px)] text-ink" aria-label="CLAVIS VIA">
+        <h1 className="flex flex-col items-center gap-[0.08em] text-[clamp(30px,6.2dvh,56px)] text-ink lg:mt-2 lg:flex-row lg:items-start lg:gap-[0.3em] lg:text-[72px]" aria-label="CLAVIS VIA">
           {/* padding-left compensa o letter-spacing depois da última letra e centraliza a palavra */}
           <span data-intro-wordmark className="type-display pl-[0.14em] leading-none font-semibold tracking-[0.14em]">
             CLAVIS
@@ -124,17 +124,19 @@ export function Intro({ pillars, children }: { pillars: ReactNode; children: Rea
         </h1>
         <p
           data-intro-tagline
-          className="type-quote max-w-[22ch] text-[clamp(17px,3dvh,24px)] text-text-soft"
+          className="type-quote max-w-[22ch] text-[clamp(17px,3dvh,24px)] text-text-soft lg:text-[28px]"
         >
           Seu caminho de volta para si, todos os dias.
         </p>
       </div>
 
-      <ul className="mt-[clamp(12px,3dvh,36px)] grid grid-cols-3 gap-2 group-data-[intro=pending]/intro:invisible">
-        {pillars}
-      </ul>
+      <div className="contents lg:flex lg:flex-col lg:gap-8 lg:rounded-[32px] lg:border lg:border-white/70 lg:bg-white/50 lg:p-9 lg:shadow-[0_24px_60px_-30px_rgb(24_47_88/0.35)] lg:backdrop-blur-md">
+        <ul className="mt-[clamp(12px,3dvh,36px)] grid grid-cols-3 gap-2 group-data-[intro=pending]/intro:invisible lg:mt-0 lg:grid-cols-1 lg:gap-4">
+          {pillars}
+        </ul>
 
-      <div className="mt-[clamp(14px,3dvh,36px)] flex flex-col group-data-[intro=pending]/intro:invisible">{children}</div>
+        <div className="mt-[clamp(14px,3dvh,36px)] flex flex-col group-data-[intro=pending]/intro:invisible lg:mt-0">{children}</div>
+      </div>
     </div>
   );
 }

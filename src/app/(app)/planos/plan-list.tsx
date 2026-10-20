@@ -58,7 +58,7 @@ export function PlanList({ plans }: { plans: PlanCardData[] }) {
         </div>
       </LayoutGroup>
 
-      <motion.ul layout className="flex flex-col gap-3">
+      <motion.ul layout className="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-4 lg:grid-cols-3">
         <AnimatePresence mode="popLayout" initial={false}>
           {visible.map((plan, index) => (
             <motion.li
@@ -72,16 +72,16 @@ export function PlanList({ plans }: { plans: PlanCardData[] }) {
               <Link
                 href={`/planos/${plan.slug}`}
                 transitionTypes={["nav-forward"]}
-                className="group flex items-stretch gap-4 rounded-card border border-white/70 bg-surface/80 p-3 shadow-soft backdrop-blur-md hover:-translate-y-0.5 hover:shadow-lift active:scale-[0.985]"
+                className="group flex items-stretch gap-4 rounded-card border border-white/70 bg-surface/80 p-3 shadow-soft backdrop-blur-md hover:-translate-y-0.5 hover:shadow-lift active:scale-[0.985] md:h-full md:flex-col md:gap-3"
               >
                 <span
                   aria-hidden
-                  className="relative w-24 shrink-0 overflow-hidden rounded-t-[48px] rounded-b-[20px]"
+                  className="relative w-24 shrink-0 overflow-hidden rounded-t-[48px] rounded-b-[20px] md:h-36 md:w-full md:rounded-t-[96px]"
                   style={{ background: planPalette(plan.palette) }}
                 >
-                  <KeyMark className="absolute -right-3 -bottom-4 h-24 w-auto opacity-30 transition-transform duration-[600ms] ease-out-expo group-hover:scale-110 group-hover:-rotate-6" />
+                  <KeyMark className="absolute -right-3 -bottom-4 h-24 w-auto opacity-30 transition-transform duration-[600ms] ease-out-expo group-hover:scale-110 group-hover:-rotate-6 md:right-4 md:-bottom-8 md:h-32" />
                 </span>
-                <span className="flex min-w-0 flex-1 flex-col gap-1.5 py-1.5">
+                <span className="flex min-w-0 flex-1 flex-col gap-1.5 py-1.5 md:px-2 md:pb-2">
                   <span className="flex items-center gap-2">
                     <span className="eyebrow text-lav-700">{THEME_LABEL[plan.theme] ?? plan.theme}</span>
                     {plan.isComplete ? (
@@ -109,7 +109,7 @@ export function PlanList({ plans }: { plans: PlanCardData[] }) {
                     </span>
                   ) : null}
                 </span>
-                <ChevronRight className="size-5 shrink-0 self-center text-muted group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden />
+                <ChevronRight className="size-5 shrink-0 self-center text-muted group-hover:translate-x-0.5 group-hover:text-ink md:hidden" aria-hidden />
               </Link>
             </motion.li>
           ))}

@@ -151,7 +151,7 @@ Roda typecheck, lint, unitários, integração e E2E. Os de integração e E2E p
 |---|---|---|
 | Unitários (63) | `pnpm test` | Recomendação por emoção (varia com o check-in, determinística por dia), progresso e dias sequenciais, sequência de dias com check-in, datas no fuso de São Paulo (23h30 ≠ dia seguinte), validação com texto vazio, só espaços, no limite, acima do limite, HTML, emoji |
 | Integração (12) | `pnpm test:integration` | Dois visitantes reais no Supabase local: um não lê, não cria em nome do outro, não apaga nem edita dados do outro; CHECKs do banco; trigger de sequência; FK composta; papel sem sessão sem acesso |
-| E2E (52 mobile + 41 desktop) | `pnpm test:e2e` | Os **6 passos do desafio com F5**; erros ao enviar vazio; nome/nota/reflexão curtos e longos (contadores e limites); "Outro" exige descrição; HTML exibido como texto; clique duplo não duplica; teclado no seletor; todos os botões da navegação, voltar, filtros, dias bloqueados, 404; **matriz de 5 aparelhos** (telas curtas sem scroll, telas longas sem nada atrás do menu); respiração guiada (o círculo cresce ao inspirar); reiniciar/sair com cancelar/Esc; isolamento entre dois navegadores; nenhuma tela estoura 320 px; **axe** sem violações graves |
+| E2E (52 mobile + 49 desktop) | `pnpm test:e2e` | Os **6 passos do desafio com F5**; erros ao enviar vazio; nome/nota/reflexão curtos e longos (contadores e limites); "Outro" exige descrição; HTML exibido como texto; clique duplo não duplica; teclado no seletor; todos os botões da navegação, voltar, filtros, dias bloqueados, 404; **matriz de 5 aparelhos** (telas curtas sem scroll, telas longas sem nada atrás do menu); **tablet/desktop** em 4 tamanhos (barra lateral, grades, sem estouro); respiração guiada (o círculo cresce ao inspirar); reiniciar/sair com cancelar/Esc; isolamento entre dois navegadores; nenhuma tela estoura 320 px; **axe** sem violações graves |
 
 O CI (GitHub Actions) roda tudo a cada push: um job de tipos, lint e unitários, e outro que sobe o Supabase local em Docker para a integração e o E2E em build de produção.
 
@@ -169,6 +169,11 @@ As medidas consideram a **altura visível no navegador**, já sem as barras do S
 - **Telas longas de verdade rolam** (planos, detalhe do plano, dia, jornada, prática com respiração), com o menu fixo embaixo e nada escondido atrás dele.
 - Abaixo de ~540px de altura (celular deitado) as telas encaixadas voltam a rolar, em vez de esmagar o conteúdo. Em tablet e desktop elas param de esticar a partir de ~680px de área útil.
 - Tudo isso é verificado por `tests/e2e/responsivo.spec.ts` em: iPhone SE (Safari) 375×553, Android pequeno 360×640, iPhone 14 (Safari) 390×664, iPhone Pro Max (Safari) 430×740 e Pixel 7 412×839.
+
+**Tablet e desktop** (a partir de 768px) deixam de ser uma coluna de celular centralizada:
+- A navegação inferior vira **barra lateral**: estreita com ícones no tablet (96px) e completa no desktop (256px, com logo, rótulos e avatar). É o mesmo elemento do celular, só muda de forma, então a pílula ativa continua deslizando entre os itens.
+- O conteúdo ganha largura (760px no tablet, 1080px no desktop) e **grades por tela**: Entrada em duas colunas (marca à esquerda, formulário num card de vidro), Check-in com a grade 4×2, Hoje com a chave do dia em destaque à direita, prática com o círculo de respiração fixo ao lado dos passos, planos em cards de 2–3 colunas com capa em arco, plano e dia em duas colunas, Jornada em 3 colunas.
+- Verificado por `tests/e2e/layout-grande.spec.ts` em 768×1024, 1024×768, 1280×800 e 1440×900: barra lateral encostada, sem cabeçalho de celular, conteúdo ao lado da barra e nenhuma tela com rolagem horizontal.
 
 ## Design: fundo vivo, tipografia e referências
 

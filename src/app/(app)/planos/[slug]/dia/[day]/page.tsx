@@ -37,23 +37,23 @@ export default async function PlanDayPage({ params }: Props) {
 
   return (
     <PageTransition>
-      <section className="flex flex-col gap-[clamp(14px,3dvh,24px)] pt-2">
+      <section className="flex flex-col gap-[clamp(14px,3dvh,24px)] pt-2 lg:grid lg:grid-cols-2 lg:gap-x-12 lg:gap-y-6">
         <BackLink href={`/planos/${plan.slug}`} label={plan.title} />
 
-        <header className="flex flex-col gap-3">
+        <header className="flex flex-col gap-3 lg:col-span-2">
           <Reveal>
             <p className="eyebrow tabular text-lav-700">
               Dia {dayNumber} de {plan.progress.totalDays}
             </p>
           </Reveal>
-          <RevealHeading className="type-display text-[clamp(30px,5.4dvh,40px)] text-ink">{planDay.title}</RevealHeading>
+          <RevealHeading className="type-display text-[clamp(30px,5.4dvh,40px)] text-ink lg:text-[52px]">{planDay.title}</RevealHeading>
           <Reveal delay={0.2}>
             <p className="text-[15px] text-text-soft">{planDay.subtitle}</p>
           </Reveal>
         </header>
 
         {status === "locked" ? (
-          <Reveal delay={0.3}>
+          <Reveal delay={0.3} className="lg:col-span-2 lg:max-w-[560px]">
             <Card className="flex flex-col items-start gap-[clamp(10px,2dvh,16px)] p-[clamp(16px,3dvh,24px)]">
               <span className="grid size-[clamp(40px,6dvh,48px)] place-items-center rounded-full bg-sunken text-muted">
                 <Lock className="size-5" aria-hidden />
@@ -78,7 +78,7 @@ export default async function PlanDayPage({ params }: Props) {
           </Reveal>
         ) : (
           <>
-            <Stagger delay={0.3} className="flex flex-col gap-4">
+            <Stagger delay={0.3} className="flex flex-col gap-4 lg:col-start-1">
               <StaggerItem>
                 <Card className="flex flex-col gap-3 p-5">
                   <p className="eyebrow flex items-center gap-2 text-sky-700">
@@ -100,7 +100,7 @@ export default async function PlanDayPage({ params }: Props) {
               </StaggerItem>
             </Stagger>
 
-            <Reveal delay={0.5}>
+            <Reveal delay={0.5} className="lg:sticky lg:top-10 lg:col-start-2 lg:self-start">
               {status === "done" && completion ? (
                 <Card className="flex flex-col gap-4 p-5">
                   <div className="flex flex-col gap-1">

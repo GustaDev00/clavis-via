@@ -120,6 +120,11 @@
   /* Altura do cabeçalho do app (conteúdo 40px + respiro) e espaço reservado para a navegação flutuante */
   --app-header: calc(50px + max(env(safe-area-inset-top), 10px));
   --app-footer: calc(var(--nav-height) + max(env(safe-area-inset-bottom), 10px) + 14px);
+  /* Tablet/desktop: a navegação vira barra lateral, então não há cabeçalho nem rodapé a descontar */
+  @media (min-width: 768px) {
+    --app-header: 0px;
+    --app-footer: 0px;
+  }
 
   color-scheme: light;
   -webkit-tap-highlight-color: transparent;
@@ -242,6 +247,11 @@
    * Teto de 680px: nos celulares não interfere (a área útil é menor); em tablet/desktop evita esticar demais.
    */
   min-height: max(400px, min(680px, calc(100dvh - var(--app-header) - var(--app-footer))));
+
+  /* Em telas grandes o conteúdo não precisa preencher a altura: só um mínimo para não ficar apertado */
+  @media (min-width: 768px) {
+    min-height: min(640px, 70dvh);
+  }
 }
 
 /* Esqueleto de carregamento: brilho por transform (barato) e sem movimento no modo reduzido */

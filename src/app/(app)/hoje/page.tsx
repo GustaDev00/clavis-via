@@ -79,17 +79,17 @@ export default async function TodayPage({ searchParams }: PageProps<"/hoje">) {
         className="pointer-events-none fixed inset-x-0 top-0 -z-[6] h-[38dvh] opacity-70 blur-[48px] [mask-image:linear-gradient(to_bottom,black_20%,transparent)]"
         style={{ background: `linear-gradient(90deg, ${tone.to} 0%, #dcd3f3 55%, #cfe0f5 100%)` }}
       />
-      <section className="screen-fit gap-[clamp(10px,2dvh,20px)] pt-[clamp(2px,1dvh,10px)]">
+      <section className="screen-fit gap-[clamp(10px,2dvh,20px)] pt-[clamp(2px,1dvh,10px)] lg:min-h-0">
         <header className="flex flex-col gap-[clamp(2px,0.8dvh,8px)]">
           <Reveal className="short:hidden">
             <p className="eyebrow text-lav-700">{dateLabel}</p>
           </Reveal>
-          <RevealHeading className="type-display text-[clamp(26px,5.2dvh,40px)] text-ink [overflow-wrap:anywhere]">
+          <RevealHeading className="type-display text-[clamp(26px,5.2dvh,40px)] text-ink [overflow-wrap:anywhere] lg:text-[52px]">
             {greetingFor(now)}, {firstName}
           </RevealHeading>
         </header>
 
-        <Stagger delay={0.3} className="flex flex-1 flex-col gap-[clamp(8px,1.6dvh,16px)]">
+        <Stagger delay={0.3} className="flex flex-1 flex-col gap-[clamp(8px,1.6dvh,16px)] lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] lg:grid-rows-[auto_1fr] lg:gap-6">
           <StaggerItem>
             {checkIn ? (
               <Card className="flex items-center gap-3.5 p-[clamp(10px,1.8dvh,16px)]">
@@ -128,9 +128,9 @@ export default async function TodayPage({ searchParams }: PageProps<"/hoje">) {
           </StaggerItem>
 
           {practice ? (
-            <StaggerItem className="flex flex-1 flex-col">
+            <StaggerItem className="flex flex-1 flex-col lg:col-start-2 lg:row-span-2 lg:row-start-1">
               <article
-                className="relative flex flex-1 flex-col justify-between gap-[clamp(8px,2dvh,20px)] overflow-hidden rounded-card border border-white/70 p-[clamp(14px,2.8dvh,24px)] shadow-lift"
+                className="relative flex flex-1 flex-col justify-between gap-[clamp(8px,2dvh,20px)] overflow-hidden rounded-card border border-white/70 p-[clamp(14px,2.8dvh,24px)] shadow-lift lg:min-h-[440px] lg:p-8"
                 style={{ background: tone.surface }}
               >
                 <KeyMark aria-hidden className="pointer-events-none absolute -top-4 -right-6 h-[clamp(120px,24dvh,200px)] w-auto opacity-25" />
@@ -141,8 +141,8 @@ export default async function TodayPage({ searchParams }: PageProps<"/hoje">) {
                       demonstração
                     </span>
                   </p>
-                  <h2 className="type-display text-[clamp(26px,4.4dvh,34px)] text-ink">{practice.key_title}</h2>
-                  <p className="text-[15px] leading-6 text-text-soft short:line-clamp-3 xshort:line-clamp-2 xshort:text-[14px] xshort:leading-5">{practice.key_message}</p>
+                  <h2 className="type-display text-[clamp(26px,4.4dvh,34px)] text-ink lg:text-[44px]">{practice.key_title}</h2>
+                  <p className="text-[15px] leading-6 text-text-soft short:line-clamp-3 xshort:line-clamp-2 xshort:text-[14px] xshort:leading-5 lg:text-[17px] lg:leading-7">{practice.key_message}</p>
                   <p className="flex items-center gap-2 text-xs font-semibold text-text-soft xshort:hidden">
                     <Sparkles className="size-3.5 shrink-0" aria-hidden />
                     {PRACTICE_KIND_LABEL[practice.kind]} · {practice.duration_minutes} min · {practice.title}
@@ -166,7 +166,7 @@ export default async function TodayPage({ searchParams }: PageProps<"/hoje">) {
           ) : null}
 
           {nextPlan ? (
-            <StaggerItem>
+            <StaggerItem className="lg:col-start-1 lg:row-start-2 lg:self-start">
               <Link href={`/planos/${nextPlan.slug}`} transitionTypes={["nav-forward"]} className="group block rounded-card">
                 <Card className="flex items-center gap-3.5 p-[clamp(8px,1.8dvh,16px)] group-hover:-translate-y-0.5 group-hover:shadow-lift">
                   <span

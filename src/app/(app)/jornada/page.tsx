@@ -42,12 +42,12 @@ export default async function JourneyPage() {
           <Reveal>
             <p className="eyebrow text-lav-700">Minha jornada</p>
           </Reveal>
-          <RevealHeading className="type-display text-[clamp(30px,5.4dvh,40px)] text-ink">O caminho que você vem fazendo</RevealHeading>
+          <RevealHeading className="type-display text-[clamp(30px,5.4dvh,40px)] text-ink lg:text-[52px]">O caminho que você vem fazendo</RevealHeading>
         </header>
 
-        <Stagger delay={0.25} className="flex flex-col gap-4">
+        <Stagger delay={0.25} className="flex flex-col gap-4 md:grid md:grid-cols-2 md:items-start md:gap-5 lg:grid-cols-3">
           {/* Sequência + semana */}
-          <StaggerItem>
+          <StaggerItem className="md:col-span-2">
             <Card className="flex flex-col gap-5 p-5">
               <div className="flex items-end justify-between gap-3">
                 <div className="flex items-end gap-2.5">
@@ -86,7 +86,7 @@ export default async function JourneyPage() {
           </StaggerItem>
 
           {/* Números */}
-          <StaggerItem className="grid grid-cols-3 gap-2.5">
+          <StaggerItem className="grid grid-cols-3 gap-2.5 md:col-span-2 lg:col-span-1 lg:grid-cols-1 lg:gap-3">
             {[
               { value: checkIns.length, label: "check-ins em 30 dias" },
               { value: completedDays, label: "dias de plano" },
@@ -183,7 +183,7 @@ export default async function JourneyPage() {
             </StaggerItem>
           ) : null}
 
-          <StaggerItem className="pt-2">
+          <StaggerItem className="pt-2 md:col-span-2 lg:col-span-3">
             <DemoDataCard />
           </StaggerItem>
         </Stagger>

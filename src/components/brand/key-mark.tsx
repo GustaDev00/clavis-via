@@ -1,10 +1,13 @@
-import type { SVGProps } from "react";
+import { useId, type SVGProps } from "react";
 
 /**
  * Símbolo da marca: uma chave com cabeça em trevo (três anéis), como na referência visual.
  * Feito só com traços para poder ser "desenhado" pela animação (DrawSVG).
  */
 export function KeyMark({ title, ...props }: SVGProps<SVGSVGElement> & { title?: string }) {
+  // Cada instância tem o próprio gradiente: um id repetido dentro de um SVG oculto (display: none)
+  // faria as outras chaves da página referenciarem um gradiente que não é pintado.
+  const gradientId = `key-mark-${useId()}`;
   return (
     <svg
       viewBox="0 0 64 120"
@@ -19,13 +22,13 @@ export function KeyMark({ title, ...props }: SVGProps<SVGSVGElement> & { title?:
     >
       {title ? <title>{title}</title> : null}
       <defs>
-        <linearGradient id="key-mark-gradient" x1="0" y1="0" x2="64" y2="120" gradientUnits="userSpaceOnUse">
+        <linearGradient id={gradientId} x1="0" y1="0" x2="64" y2="120" gradientUnits="userSpaceOnUse">
           <stop offset="0" stopColor="#8e7fd0" />
           <stop offset="0.55" stopColor="#7fa3d9" />
           <stop offset="1" stopColor="#c6b9ec" />
         </linearGradient>
       </defs>
-      <g stroke="url(#key-mark-gradient)">
+      <g stroke={`url(#${gradientId})`}>
         <circle data-key-part cx="32" cy="17" r="11" />
         <circle data-key-part cx="20" cy="36" r="11" />
         <circle data-key-part cx="44" cy="36" r="11" />

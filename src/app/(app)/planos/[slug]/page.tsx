@@ -37,12 +37,12 @@ export default async function PlanPage({ params, searchParams }: PageProps<"/pla
 
   return (
     <PageTransition>
-      <section className="flex flex-col gap-6 pt-2">
+      <section className="flex flex-col gap-6 pt-2 lg:grid lg:grid-cols-2 lg:gap-x-12 lg:gap-y-6">
         <BackLink href="/planos" label="Planos" />
 
-        <Reveal>
+        <Reveal className="lg:col-start-1">
           <div
-            className="relative h-[clamp(96px,17dvh,160px)] overflow-hidden rounded-card border border-white/70 shadow-lift"
+            className="relative h-[clamp(96px,17dvh,160px)] overflow-hidden rounded-card border border-white/70 shadow-lift lg:h-60"
             style={{ background: planPalette(plan.palette) }}
           >
             <KeyMark aria-hidden className="absolute -right-4 -bottom-8 h-56 w-auto opacity-30" />
@@ -52,8 +52,8 @@ export default async function PlanPage({ params, searchParams }: PageProps<"/pla
           </div>
         </Reveal>
 
-        <header className="flex flex-col gap-3">
-          <RevealHeading className="type-display text-[clamp(30px,5.4dvh,38px)] text-ink">{plan.title}</RevealHeading>
+        <header className="flex flex-col gap-3 lg:col-start-1">
+          <RevealHeading className="type-display text-[clamp(30px,5.4dvh,38px)] text-ink lg:text-[48px]">{plan.title}</RevealHeading>
           <Reveal delay={0.2} className="flex flex-col gap-3">
             <p className="flex flex-wrap items-center gap-4 text-sm font-semibold text-text-soft">
               <span className="inline-flex items-center gap-1.5">
@@ -69,7 +69,7 @@ export default async function PlanPage({ params, searchParams }: PageProps<"/pla
         </header>
 
         {progress.isStarted ? (
-          <Reveal delay={0.3}>
+          <Reveal delay={0.3} className="lg:col-start-1">
             <Card className="flex flex-col gap-3 p-4">
               <div className="flex items-center justify-between text-sm">
                 <span className="font-bold text-ink">{progress.isComplete ? "Plano concluído" : "Seu progresso"}</span>
@@ -82,7 +82,7 @@ export default async function PlanPage({ params, searchParams }: PageProps<"/pla
           </Reveal>
         ) : null}
 
-        <Stagger delay={0.35} className="flex flex-col gap-2.5">
+        <Stagger delay={0.35} className="flex flex-col gap-2.5 lg:col-start-2 lg:row-start-2">
           <StaggerItem>
             <h2 className="text-[17px] font-bold text-ink">Dias do plano</h2>
           </StaggerItem>
@@ -147,7 +147,7 @@ export default async function PlanPage({ params, searchParams }: PageProps<"/pla
           })}
         </Stagger>
 
-        <Reveal delay={0.55}>
+        <Reveal delay={0.55} className="lg:col-start-2 lg:row-start-3 lg:self-start">
           {!progress.isStarted ? (
             <StartPlanForm planSlug={plan.slug} />
           ) : progress.nextDayNumber ? (
