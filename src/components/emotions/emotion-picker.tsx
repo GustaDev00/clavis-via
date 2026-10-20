@@ -57,6 +57,7 @@ export function EmotionPicker({ value, onChange, invalid, describedBy, labelledB
         // Nota aberta (CheckInForm): linhas mais baixas, com transição suave
         "group-data-[note=open]/checkin:grid-rows-[repeat(4,clamp(46px,6.6dvh,88px))]",
         "min-[360px]:group-data-[note=open]/checkin:grid-rows-[repeat(3,clamp(46px,7.4dvh,96px))]",
+        "xshort:group-data-[note=open]/checkin:grid-rows-[repeat(4,42px)] min-[360px]:xshort:group-data-[note=open]/checkin:grid-rows-[repeat(3,44px)]",
         invalid && "shadow-[0_0_0_2px_rgb(201_80_108/0.45)]",
       )}
     >
@@ -115,7 +116,7 @@ export function EmotionPicker({ value, onChange, invalid, describedBy, labelledB
             >
               <EmotionFace
                 emotion={emotion.id}
-                className="size-[clamp(30px,5.6dvh,48px)] transition-[width,height] duration-[var(--dur-meso)] ease-out-soft group-data-[note=open]/checkin:size-[clamp(26px,4.2dvh,40px)]"
+                className="size-[clamp(30px,5.6dvh,48px)] transition-[width,height] duration-[var(--dur-meso)] ease-out-soft group-data-[note=open]/checkin:size-[clamp(26px,4.2dvh,40px)] xshort:group-data-[note=open]/checkin:size-6"
               />
               {selected ? (
                 <motion.span

@@ -13,7 +13,7 @@
  */
 
 @theme {
-  --font-display: var(--font-cormorant), "Times New Roman", serif;
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
 
   --color-bg: #f7f8fc;
@@ -137,13 +137,15 @@
  * ------------------------------------------------------------------------ */
 
 @layer base {
+  /* O fundo de cor fica nas camadas fixas (CSS de reserva → aurora WebGL → grão),
+     por isso html/body não pintam nada: um fundo sólido aqui cobriria o canvas. */
   html {
     background: var(--color-bg);
     scrollbar-gutter: stable;
   }
 
   body {
-    background: var(--color-bg);
+    background: transparent;
     color: var(--color-text);
     font-family: var(--font-sans);
     font-feature-settings: "ss01";
@@ -194,11 +196,22 @@
  * Utilitários
  * ------------------------------------------------------------------------ */
 
+/* Títulos: Bricolage Grotesque em peso médio, bem apertada, com o eixo óptico de display */
 @utility type-display {
   font-family: var(--font-display);
   font-weight: 500;
+  font-variation-settings: "opsz" 96;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+}
+
+/* Citações e mensagens (antes em itálico serifado): mesma família, peso leve e tracking normal */
+@utility type-quote {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-variation-settings: "opsz" 48;
   letter-spacing: -0.01em;
-  line-height: 1.08;
+  line-height: 1.3;
 }
 
 @utility eyebrow {
@@ -467,4 +480,19 @@ dialog.cv-dialog[open]::backdrop {
     opacity: 0;
     transform: scale(1.6);
   }
+}
+
+/* ---------------------------------------------------------------------------
+ * Textura de grão (filme/papel) sobre o fundo: tira o aspecto "chapado" dos gradientes.
+ * SVG feTurbulence em data URI — nada para baixar. Fica abaixo do conteúdo.
+ * ------------------------------------------------------------------------ */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: -5;
+  pointer-events: none;
+  opacity: 0.32;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.09 0 0 0 0 0.18 0 0 0 0 0.34 0 0 0 0.9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  background-size: 180px 180px;
 }

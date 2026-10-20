@@ -53,7 +53,7 @@ export default async function PracticePage({ params }: PageProps<"/hoje/pratica/
             <p className="text-[15px] leading-6 text-text-soft">{practice.summary}</p>
             <blockquote className="border-l-2 border-lav-300 pl-4">
               <p className="eyebrow text-lav-700">{practice.key_title}</p>
-              <p className="type-display pt-1 text-[20px] leading-[1.35] text-text italic">{practice.key_message}</p>
+              <p className="type-quote pt-1 text-[19px] text-text">{practice.key_message}</p>
             </blockquote>
           </Reveal>
         </header>

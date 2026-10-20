@@ -84,7 +84,7 @@ export default async function PlanDayPage({ params }: Props) {
                   <p className="eyebrow flex items-center gap-2 text-sky-700">
                     <MessageCircleHeart className="size-4" aria-hidden /> Mensagem do dia
                   </p>
-                  <p className="type-display text-[22px] leading-[1.35] text-text italic">{planDay.message}</p>
+                  <p className="type-quote text-[21px] text-text">{planDay.message}</p>
                 </Card>
               </StaggerItem>
               <StaggerItem>

@@ -6,7 +6,7 @@ type Variant = "primary" | "soft" | "outline" | "ghost" | "danger";
 type Size = "sm" | "md" | "lg";
 
 const base =
-  "group/button relative inline-flex select-none items-center justify-center gap-2 rounded-full font-semibold " +
+  "group/button relative inline-flex select-none items-center justify-center gap-2 rounded-full font-display font-semibold tracking-[-0.01em] " +
   "duration-[var(--dur-micro)] ease-out-soft active:scale-[0.97] active:duration-[var(--dur-press)] " +
   "disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50";
 

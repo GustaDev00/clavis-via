@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { Pause, Play } from "lucide-react";
+import { useAmbient } from "@/components/ambient/ambient-provider";
 import { Button } from "@/components/ui/button";
 import type { BreathPhase } from "@/lib/domain/practices";
 import { EASE } from "@/lib/motion";
@@ -21,6 +22,9 @@ export function BreathingGuide({ phases }: { phases: BreathPhase[] }) {
   const [running, setRunning] = useState(false);
   const [phase, setPhase] = useState<BreathPhase | null>(null);
   const [cycles, setCycles] = useState(0);
+  const { setBreath } = useAmbient();
+  // Valor 0–1 animado pelo GSAP; a cada quadro alimenta a "respiração" do fundo
+  const breath = useRef({ value: 0 });
 
   useGSAP(
     () => {
@@ -41,9 +45,11 @@ export function BreathingGuide({ phases }: { phases: BreathPhase[] }) {
           if (item.key === "inspire") {
             tl.to(orb, { scale: 1, duration: item.seconds, ease: "sine.inOut" }, "<");
             tl.to(glow, { opacity: 0.9, scale: reduce ? 1 : 1.15, duration: item.seconds, ease: "sine.inOut" }, "<");
+            tl.to(breath.current, { value: 1, duration: item.seconds, ease: "sine.inOut", onUpdate: () => setBreath(breath.current.value) }, "<");
           } else if (item.key === "solte") {
             tl.to(orb, { scale: reduce ? 1 : 0.62, duration: item.seconds, ease: "sine.inOut" }, "<");
             tl.to(glow, { opacity: 0.35, scale: 1, duration: item.seconds, ease: "sine.inOut" }, "<");
+            tl.to(breath.current, { value: 0, duration: item.seconds, ease: "sine.inOut", onUpdate: () => setBreath(breath.current.value) }, "<");
           } else {
             tl.to({}, { duration: item.seconds });
           }
@@ -51,11 +57,14 @@ export function BreathingGuide({ phases }: { phases: BreathPhase[] }) {
 
         gsap.set(orb, { scale: reduce ? 1 : 0.62 });
         timeline.current = tl;
-        return () => tl.kill();
+        return () => {
+          tl.kill();
+          setBreath(0);
+        };
       });
       return () => mm.revert();
     },
-    { scope, dependencies: [phases] },
+    { scope, dependencies: [phases, setBreath] },
   );
 
   // Só controla a timeline já criada no useGSAP (nenhuma animação nova nasce aqui)

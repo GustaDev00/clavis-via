@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, CalendarDays, Clock, RefreshCcw, Sparkles } from "lucide-react";
 import { KeyMark } from "@/components/brand/key-mark";
 import { EmotionFace } from "@/components/emotions/emotion-face";
+import { AmbientTone } from "@/components/ambient/ambient-provider";
 import { TONES, planPalette } from "@/components/emotions/tones";
 import { PageTransition } from "@/components/motion/page-transition";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
@@ -57,7 +58,8 @@ export default async function TodayPage({ searchParams }: PageProps<"/hoje">) {
   const nextPlan = inProgress[0] ?? pickPlan(plans, emotion, progressBySlug(plans));
   const isContinuing = Boolean(nextPlan && inProgress[0]?.slug === nextPlan.slug);
 
-  const tone = TONES[emotion ? getEmotion(emotion).tone : "aurora"];
+  const toneKey = emotion ? getEmotion(emotion).tone : "aurora";
+  const tone = TONES[toneKey];
   const dateLabel = new Intl.DateTimeFormat("pt-BR", {
     weekday: "long",
     day: "numeric",
@@ -70,6 +72,13 @@ export default async function TodayPage({ searchParams }: PageProps<"/hoje">) {
 
   return (
     <PageTransition>
+      <AmbientTone tone={toneKey} />
+      {/* Faixa de luz no horizonte, na cor da emoção do dia (fica entre a aurora e o grão) */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-x-0 top-0 -z-[6] h-[38dvh] opacity-70 blur-[48px] [mask-image:linear-gradient(to_bottom,black_20%,transparent)]"
+        style={{ background: `linear-gradient(90deg, ${tone.to} 0%, #dcd3f3 55%, #cfe0f5 100%)` }}
+      />
       <section className="screen-fit gap-[clamp(10px,2dvh,20px)] pt-[clamp(2px,1dvh,10px)]">
         <header className="flex flex-col gap-[clamp(2px,0.8dvh,8px)]">
           <Reveal className="short:hidden">

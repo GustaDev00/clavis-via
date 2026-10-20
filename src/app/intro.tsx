@@ -53,6 +53,7 @@ export function Intro({ pillars, children }: { pillars: ReactNode; children: Rea
               { drawSVG: "100%", duration: 1.1, stagger: 0.09, ease: "cv.inOutSoft" },
             )
             .fromTo(q("[data-intro-key]"), { y: 10, scale: 0.94 }, { y: 0, scale: 1, duration: 1.2, ease: "expo.out" }, 0)
+            .to(q("[data-intro-sweep]"), { xPercent: 520, duration: 1.4, ease: "cv.inOutSoft" }, 0.9)
             .fromTo(
               wordmark.chars,
               { autoAlpha: 0, yPercent: 60, filter: "blur(6px)" },
@@ -62,6 +63,17 @@ export function Intro({ pillars, children }: { pillars: ReactNode; children: Rea
             .fromTo(tagline.lines, { yPercent: 110 }, { yPercent: 0, duration: 0.9, ease: "expo.out", stagger: 0.08 }, 0.95)
             .fromTo(pillarItems, { y: 14, autoAlpha: 0, filter: "blur(4px)" }, { ...rise, duration: 0.6, stagger: 0.08 }, 1.2)
             .fromTo(steps, { y: 16, autoAlpha: 0, filter: "blur(4px)" }, { ...rise, duration: 0.7, stagger: 0.08 }, 1.45);
+
+          // Deriva ociosa da fechadura: duas senoides com períodos incomensuráveis (nunca repete igual)
+          const keyhole = q("[data-intro-keyhole]");
+          const drift = (time: number) => {
+            gsap.set(keyhole, {
+              y: 3 * Math.sin(time * 0.37) + 1.5 * Math.sin(time * 0.91),
+              rotation: 1.1 * Math.sin(time * 0.29),
+            });
+          };
+          gsap.ticker.add(drift);
+          return () => gsap.ticker.remove(drift);
         },
       );
 
@@ -82,21 +94,37 @@ export function Intro({ pillars, children }: { pillars: ReactNode; children: Rea
         className="flex min-h-0 flex-1 flex-col items-center justify-center gap-[clamp(8px,1.8dvh,20px)] text-center group-data-[intro=pending]/intro:invisible"
       >
         <div data-intro-key className="relative">
-          <span aria-hidden className="absolute inset-[-28%] rounded-full bg-lav-200/60 blur-2xl" />
-          <KeyMark className="relative h-[clamp(52px,11.5dvh,120px)] w-auto" />
+          {/* A única luz da tela: um halo atrás da fechadura */}
+          <span
+            aria-hidden
+            className="absolute top-1/2 left-1/2 size-[260%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(255_255_255/0.75),rgb(220_211_243/0.35)_55%,transparent)]"
+          />
+          {/* Fechadura em vidro: arco no topo, base reta — a única superfície de vidro da tela */}
+          <div
+            data-intro-keyhole
+            className="relative overflow-hidden rounded-t-full rounded-b-[26%] border border-white/70 bg-white/45 px-[clamp(14px,3dvh,30px)] pt-[clamp(14px,3dvh,30px)] pb-[clamp(10px,2.2dvh,22px)] shadow-[0_18px_40px_-20px_rgb(24_47_88/0.35)] backdrop-blur-[14px]"
+          >
+            <KeyMark className="relative h-[clamp(48px,10.4dvh,108px)] w-auto" />
+            {/* Varredura de luz: passa uma vez ao carregar */}
+            <span
+              data-intro-sweep
+              aria-hidden
+              className="pointer-events-none absolute inset-y-[-20%] left-0 w-[45%] -translate-x-[220%] skew-x-[-20deg] bg-[linear-gradient(90deg,transparent,rgb(255_255_255/0.85),transparent)]"
+            />
+          </div>
         </div>
-        <h1 className="flex flex-col items-center gap-[0.08em] text-[clamp(30px,6.6dvh,60px)] text-ink" aria-label="CLAVIS VIA">
+        <h1 className="flex flex-col items-center gap-[0.08em] text-[clamp(30px,6.2dvh,56px)] text-ink" aria-label="CLAVIS VIA">
           {/* padding-left compensa o letter-spacing depois da última letra e centraliza a palavra */}
-          <span data-intro-wordmark className="type-display pl-[0.22em] leading-none tracking-[0.22em]">
+          <span data-intro-wordmark className="type-display pl-[0.14em] leading-none font-semibold tracking-[0.14em]">
             CLAVIS
           </span>
-          <span data-intro-wordmark className="type-display pl-[0.22em] leading-none tracking-[0.22em]">
+          <span data-intro-wordmark className="type-display pl-[0.14em] leading-none font-semibold tracking-[0.14em]">
             VIA
           </span>
         </h1>
         <p
           data-intro-tagline
-          className="type-display max-w-[20ch] text-[clamp(18px,3.2dvh,26px)] leading-[1.15] text-text-soft italic"
+          className="type-quote max-w-[22ch] text-[clamp(17px,3dvh,24px)] text-text-soft"
         >
           Seu caminho de volta para si, todos os dias.
         </p>

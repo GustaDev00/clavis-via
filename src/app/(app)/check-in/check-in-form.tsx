@@ -3,12 +3,13 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useActionState, useEffect, useId, useRef, useState, type SubmitEvent } from "react";
 import { Plus } from "lucide-react";
+import { useAmbient } from "@/components/ambient/ambient-provider";
 import { EmotionPicker } from "@/components/emotions/emotion-picker";
 import { Button } from "@/components/ui/button";
 import { TextAreaField } from "@/components/ui/field";
 import { FormMessage } from "@/components/ui/form-message";
 import { IDLE, type FormState } from "@/lib/actions/state";
-import type { Emotion } from "@/lib/domain/emotions";
+import { getEmotion, type Emotion } from "@/lib/domain/emotions";
 import { checkInSchema, LIMITS, toFieldErrors, type FieldErrors } from "@/lib/domain/validation";
 import { DUR, EASE } from "@/lib/motion";
 import { saveCheckIn, type CheckInField } from "./actions";
@@ -26,6 +27,13 @@ export function CheckInForm({ headingId }: { headingId: string }) {
   const [attempt, setAttempt] = useState(0);
   const errorId = useId();
   const noteRef = useRef<HTMLDivElement>(null);
+  const { setTone } = useAmbient();
+
+  // O fundo da tela muda para o tom da emoção escolhida (e volta ao da marca ao sair)
+  useEffect(() => {
+    setTone(emotion ? getEmotion(emotion).tone : "brand");
+    return () => setTone("brand");
+  }, [emotion, setTone]);
 
   const serverErrors = state.status === "error" ? (state.fieldErrors ?? {}) : {};
   const errors: FieldErrors<CheckInField> = { ...serverErrors, ...localErrors };
@@ -119,6 +127,8 @@ export function CheckInForm({ headingId }: { headingId: string }) {
               maxLength={LIMITS.checkInNote}
               rows={2}
               className="min-h-[clamp(52px,10dvh,112px)]"
+              // Quem abriu a nota pelo botão já sabe o que é o campo; para "Outro" o rótulo é instrução
+              hideLabel={!isOther}
               label={
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.span
@@ -154,7 +164,7 @@ export function CheckInForm({ headingId }: { headingId: string }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 0.16 } }}
-            className="group flex h-11 items-center justify-center gap-2 self-center rounded-full px-4 text-sm font-semibold text-lav-700 hover:bg-lav-100 active:scale-95"
+            className="group flex h-11 items-center justify-center gap-2 self-center rounded-full px-4 text-sm font-semibold text-lav-700 hover:bg-lav-100 active:scale-95 xshort:h-10"
           >
             <Plus className="size-4 transition-transform duration-[var(--dur-meso)] group-hover:rotate-90" aria-hidden />
             Adicionar uma nota <span className="font-normal text-muted">(opcional)</span>

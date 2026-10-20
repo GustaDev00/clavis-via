@@ -1,14 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Manrope } from "next/font/google";
+import { Bricolage_Grotesque, Manrope } from "next/font/google";
 import { MotionProvider } from "@/components/motion/motion-provider";
 import { AmbientBackground } from "@/components/brand/ambient-background";
+import { AmbientProvider } from "@/components/ambient/ambient-provider";
 import "./globals.css";
 
-const display = Cormorant_Garamond({
+// Fonte variável (peso 200–800 + eixo óptico): um único arquivo, títulos com peso fino e corpo firme
+const display = Bricolage_Grotesque({
   subsets: ["latin"],
-  style: ["normal", "italic"],
-  weight: ["500", "600"],
-  variable: "--font-cormorant",
+  axes: ["opsz"],
+  variable: "--font-bricolage",
   display: "swap",
 });
 
@@ -39,8 +40,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="pt-BR" className={`${display.variable} ${sans.variable} antialiased`}>
       <body className="min-h-dvh">
+        {/* Camadas do fundo: CSS (fallback) → aurora WebGL → grão; o conteúdo vem por cima */}
         <AmbientBackground />
-        <MotionProvider>{children}</MotionProvider>
+        <div aria-hidden className="grain" />
+        <MotionProvider>
+          <AmbientProvider>{children}</AmbientProvider>
+        </MotionProvider>
       </body>
     </html>
   );

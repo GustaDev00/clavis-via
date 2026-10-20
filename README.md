@@ -47,7 +47,7 @@ Extras: o Dia 2 só abre depois do Dia 1, **Reiniciar demo** apaga seus registro
 | Camada | Escolha |
 |---|---|
 | Front-end + back-end | **Next.js 16** (App Router, React Server Components, Server Actions), React 19.3, TypeScript |
-| Estilo e movimento | Tailwind CSS v4, **GSAP 3.15** (SplitText, DrawSVG, CustomEase), **Motion** (motion/react), View Transitions nativas do React |
+| Estilo e movimento | Tailwind CSS v4, **GSAP 3.15** (SplitText, DrawSVG, CustomEase), **Motion** (motion/react), View Transitions nativas do React, fundo em **WebGL** (shader próprio, sem three.js) |
 | Dados e auth | **Supabase** (Postgres 17 + Auth anônimo + Data API) em São Paulo (`gru1`), provisionado pela integração da Vercel |
 | Validação | Zod (as mesmas regras no formulário e na Server Action) + `CHECK`s no banco |
 | Testes | Vitest (unitários + integração de RLS), Playwright (E2E mobile e desktop) + axe-core |
@@ -170,6 +170,19 @@ As medidas consideram a **altura visível no navegador**, já sem as barras do S
 - Abaixo de ~540px de altura (celular deitado) as telas encaixadas voltam a rolar, em vez de esmagar o conteúdo. Em tablet e desktop elas param de esticar a partir de ~680px de área útil.
 - Tudo isso é verificado por `tests/e2e/responsivo.spec.ts` em: iPhone SE (Safari) 375×553, Android pequeno 360×640, iPhone 14 (Safari) 390×664, iPhone Pro Max (Safari) 430×740 e Pixel 7 412×839.
 
+## Design: fundo vivo, tipografia e referências
+
+A direção visual veio de uma pesquisa em sites premiados no **Awwwards** (2025–2026). O relatório completo, com 12 referências reais, o que cada uma faz e o que foi aproveitado, está em [docs/referencias-awwwards.md](docs/referencias-awwwards.md).
+
+**Sistema de fundo "seda + grão + luz"** (três camadas fixas atrás do conteúdo):
+1. **Aurora WebGL** (`src/components/ambient`): um shader de ~60 linhas (ruído fractal com *domain warping*, como no Why Zero, SOTM set/2026, e no gradiente líquido do Vibrant Wellness, SOTD fev/2026) mistura quatro cores da paleta. Roda a 0,4× da resolução e 30 fps, pausa com a aba oculta, não é criado em aparelhos fracos ou com economia de dados e, com "reduzir movimento", fica parado (só as cores transitam). Sem WebGL, o fundo CSS por baixo continua.
+2. **Grão** (`.grain` em `globals.css`): SVG `feTurbulence` em *data URI*, estático, em `soft-light`, como no Heron AI (SOTD out/2026) e no Sleep Well Creative (SOTD jan/2026). Tira o aspecto chapado e evita *banding* nos pastéis.
+3. **Uma luz por tela**, em vez de blobs espalhados: a fechadura de vidro com halo na Entrada (arco como no Antara Spa e no Sleep Well), a faixa de horizonte tingida pela emoção no Hoje (Bevel Health, HM mai/2026) e o brilho que respira junto com o círculo na prática guiada.
+
+O fundo **reage ao app**: no Check-in ele muda para o tom da emoção escolhida (ao vivo), no Hoje mantém o tom do check-in do dia e na respiração clareia ao inspirar. A API é `useAmbient()` / `<AmbientTone>` em `src/components/ambient/ambient-provider.tsx`.
+
+**Tipografia:** [Bricolage Grotesque](https://fonts.google.com/specimen/Bricolage+Grotesque) (variável, com eixo óptico) nos títulos e botões, e Manrope no texto. Escolhida entre quatro direções testadas lado a lado em telas do app ([docs/previa-fontes.png](docs/previa-fontes.png)). A Cormorant Garamond anterior tinha algarismos *oldstyle* ("1" parecia "I").
+
 ## Movimento e acessibilidade
 
 O desafio aceita "componentes simples, sem animações elaboradas" como simplificação. Aqui o movimento é **calmo e funcional**: pouco deslocamento, poucas curvas reutilizadas, saídas mais rápidas que entradas. Ele serve para comunicar o que mudou (erro, salvamento, navegação para frente/para trás) sem atrasar o fluxo. Com **"reduzir movimento"** ativo no sistema, os deslocamentos viram crossfades curtos. Os títulos usam SplitText sem quebrar a leitura por leitores de tela, o seletor de emoções é um `radiogroup` navegável por setas e os erros são anunciados (`aria-live`).
@@ -181,7 +194,7 @@ Ferramentas usadas: **Claude Code** (modelo Claude Opus) como par de programaç�
 | Etapa | Como a IA ajudou |
 |---|---|
 | Entendimento | Extração do enunciado e da imagem de referência do `.docx`; checklist de requisitos |
-| Pesquisa visual | Levantamento dos *Sites of the Month* da Awwwards (out/2024 → set/2026) e de sites premiados de bem-estar: tipografia, paleta (com contraste WCAG verificado) e curvas de animação. Daí vieram a Cormorant Garamond + Manrope e a linguagem de movimento |
+| Pesquisa visual | Duas rodadas no Awwwards: os *Sites of the Month* (out/2024 → set/2026) para paleta, contraste WCAG e curvas de animação; depois 12 premiados de 2025–2026 lidos ao vivo (código e CSS) para fundos, efeitos e fontes ([docs/referencias-awwwards.md](docs/referencias-awwwards.md)). A fonte final foi escolhida pelo Gustavo numa prévia lado a lado |
 | Código | Schema/RLS, domínio, DAL, Server Actions, componentes e telas, gerados e iterados em conversa |
 | Testes | Escrita das suítes; a IA também rodou os testes e corrigiu o que falhou (ex.: trigger respondendo com o erro errado, `tailwind-merge` descartando a classe da fonte, aria proibido no SplitText) |
 | Segurança | Ao verificar a nuvem, a auditoria encontrou GRANTs automáticos para `anon`, o que gerou a migration `harden_grants` |

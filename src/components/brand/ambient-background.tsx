@@ -1,14 +1,13 @@
 /**
- * Névoa pastel ao fundo, com deriva lenta (18–26s, curva senoidal).
- * Só CSS: não depende de hidratação e para no modo de movimento reduzido.
+ * Fundo de reserva em CSS, pintado já no servidor: as mesmas cores da aurora, em gradientes
+ * radiais estáticos. Fica visível até o canvas WebGL entrar (e permanece se ele não existir).
+ * Sem filter: blur() — o desfoque dos gradientes já é natural e não custa repaint.
  */
 export function AmbientBackground() {
   return (
-    <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-      <div className="absolute -top-[20%] -left-[25%] size-[70vmax] rounded-full bg-sky-200/55 blur-[90px] motion-safe:animate-drift" />
-      <div className="absolute top-[25%] -right-[30%] size-[60vmax] rounded-full bg-rose-200/45 blur-[90px] motion-safe:animate-drift-slow" />
-      <div className="absolute -bottom-[25%] left-[5%] size-[65vmax] rounded-full bg-lav-200/50 blur-[100px] motion-safe:animate-drift" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgb(247_248_252/0.6)_100%)]" />
-    </div>
+    <div
+      aria-hidden
+      className="pointer-events-none fixed inset-0 -z-20 bg-[radial-gradient(60%_42%_at_18%_12%,#e3ecf8,transparent_70%),radial-gradient(55%_40%_at_88%_28%,#ece7f8,transparent_70%),radial-gradient(75%_45%_at_50%_105%,#fbe6ec,transparent_70%),#f7f8fc]"
+    />
   );
 }

@@ -76,7 +76,7 @@ export function PlanList({ plans }: { plans: PlanCardData[] }) {
               >
                 <span
                   aria-hidden
-                  className="relative w-24 shrink-0 overflow-hidden rounded-[20px]"
+                  className="relative w-24 shrink-0 overflow-hidden rounded-t-[48px] rounded-b-[20px]"
                   style={{ background: planPalette(plan.palette) }}
                 >
                   <KeyMark className="absolute -right-3 -bottom-4 h-24 w-auto opacity-30 transition-transform duration-[600ms] ease-out-expo group-hover:scale-110 group-hover:-rotate-6" />

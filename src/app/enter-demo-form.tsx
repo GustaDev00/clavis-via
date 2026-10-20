@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState, type SubmitEvent } from "react";
-import { ArrowRight, ShieldCheck } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TextField } from "@/components/ui/field";
 import { FormMessage } from "@/components/ui/form-message";
@@ -41,7 +41,7 @@ export function EnterDemoForm() {
             setDisplayName(event.target.value);
             setLocalErrors({});
           }}
-          hint="Sem cadastro: usamos só para te cumprimentar."
+          hint="Sem cadastro — esta é uma demonstração."
           error={error}
           errorKey={attempt + (state.status === "error" ? state.attempt : 0)}
           className="h-[clamp(48px,7dvh,56px)]"
@@ -66,16 +66,6 @@ export function EnterDemoForm() {
         </Button>
       </div>
 
-      <div data-intro-step className="flex flex-col items-center gap-0.5 text-center text-[11px] leading-4 text-muted">
-        <p className="flex items-center gap-1.5">
-          <ShieldCheck className="size-3.5 shrink-0" aria-hidden />
-          Demonstração · use apenas dados fictícios
-        </p>
-        <p>
-          Não substitui acompanhamento profissional. Apoio 24h:{" "}
-          <strong className="font-semibold text-text-soft">CVV 188</strong>
-        </p>
-      </div>
     </form>
   );
 }

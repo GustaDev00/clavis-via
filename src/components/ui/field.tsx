@@ -8,6 +8,8 @@ import { DUR, EASE, SPRING } from "@/lib/motion";
 
 type ShellProps = {
   label: ReactNode;
+  /** Mantém o rótulo só para leitores de tela (quando o contexto já deixa claro o que é o campo) */
+  hideLabel?: boolean;
   hint?: ReactNode;
   error?: string;
   /** Muda a cada envio com erro: reanima a mensagem mesmo que o texto seja o mesmo */
@@ -20,14 +22,14 @@ type ShellProps = {
  * Estrutura comum de campos: rótulo, controle e uma linha de ajuda/erro com espaço reservado.
  * A ajuda faz crossfade para o erro (sem empurrar o layout) e o erro é anunciado por aria-live.
  */
-function FieldShell({ label, hint, error, errorKey, count, children }: ShellProps) {
+function FieldShell({ label, hideLabel, hint, error, errorKey, count, children }: ShellProps) {
   const inputId = useId();
   const messageId = `${inputId}-message`;
   const nearLimit = count ? count.value >= count.max * 0.9 : false;
 
   return (
     <div className="flex flex-col gap-2">
-      <label htmlFor={inputId} className="text-sm font-semibold text-ink">
+      <label htmlFor={inputId} className={cn("text-sm font-semibold text-ink", hideLabel && "sr-only")}>
         {label}
       </label>
 
@@ -127,16 +129,18 @@ export function TextField({ label, hint, error, errorKey, showCount, className, 
 
 type TextAreaFieldProps = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "id"> & {
   label: ReactNode;
+  hideLabel?: boolean;
   hint?: ReactNode;
   error?: string;
   errorKey?: number | string;
 };
 
-export function TextAreaField({ label, hint, error, errorKey, className, ...props }: TextAreaFieldProps) {
+export function TextAreaField({ label, hideLabel, hint, error, errorKey, className, ...props }: TextAreaFieldProps) {
   const length = typeof props.value === "string" ? props.value.length : 0;
   return (
     <FieldShell
       label={label}
+      hideLabel={hideLabel}
       hint={hint}
       error={error}
       errorKey={errorKey}
