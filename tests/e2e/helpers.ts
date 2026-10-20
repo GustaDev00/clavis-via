@@ -44,5 +44,7 @@ export async function expectNoHorizontalOverflow(page: Page) {
 /** Espera as animações de entrada assentarem antes de uma captura de tela. */
 export async function settle(page: Page, ms = 1600) {
   await page.waitForLoadState("networkidle");
+  // Fontes carregadas antes de medir: evita alturas diferentes em redes lentas (ex.: produção)
+  await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(ms);
 }
