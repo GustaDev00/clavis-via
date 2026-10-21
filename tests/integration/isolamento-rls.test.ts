@@ -162,6 +162,64 @@ describe("progresso nos planos", () => {
   });
 });
 
+describe("outras tabelas pessoais e privilégios", () => {
+  it("práticas concluídas e inscrições de outra pessoa são invisíveis e intocáveis", async () => {
+    const { data: practice } = await ana.client.from("practices").select("id").limit(1).single();
+    const { data: planRow } = await ana.client.from("plans").select("id").eq("slug", "recomecar-com-leveza").single();
+    expect((await ana.client.from("practice_completions").insert({ practice_id: practice!.id })).error).toBeNull();
+    expect((await ana.client.from("plan_enrollments").insert({ plan_id: planRow!.id })).error).toBeNull();
+
+    expect((await bruno.client.from("practice_completions").select("*")).data).toEqual([]);
+    expect((await bruno.client.from("plan_enrollments").select("*")).data).toEqual([]);
+    expect((await bruno.client.from("plan_enrollments").delete().eq("user_id", ana.userId).select()).data).toEqual([]);
+  });
+
+  it("não dá para criar perfil com o id de outra pessoa nem editar o nome alheio", async () => {
+    const forged = await bruno.client.from("profiles").insert({ id: ana.userId, display_name: "Impostor" });
+    expect(forged.error).not.toBeNull(); // a policy de INSERT exige id = auth.uid()
+
+    const { data } = await bruno.client.from("profiles").update({ display_name: "Hackeada" }).eq("id", ana.userId).select();
+    expect(data).toEqual([]);
+    const { data: still } = await ana.client.from("profiles").select("display_name").eq("id", ana.userId).single();
+    expect(still?.display_name).toBe("Ana");
+  });
+
+  it("registros de progresso não são editáveis (sem GRANT de UPDATE)", async () => {
+    for (const table of ["practice_completions", "plan_enrollments", "plan_day_completions"] as const) {
+      const { error } = await ana.client.from(table).update({ user_id: bruno.userId } as never).eq("user_id", ana.userId);
+      expect(error?.code, table).toBe("42501");
+    }
+  });
+
+  it("nenhuma função de public é chamável pelo papel anônimo da API", async () => {
+    const guest = newClient();
+    for (const fn of ["delete_my_account", "reset_my_demo"] as const) {
+      const { error } = await guest.rpc(fn);
+      expect(error, fn).not.toBeNull();
+    }
+  });
+});
+
+describe("reiniciar e apagar a conta", () => {
+  it("reset_my_demo apaga só os registros de quem chama", async () => {
+    await bruno.client.from("check_ins").insert({ emotion: "paz" });
+    expect((await bruno.client.rpc("reset_my_demo")).error).toBeNull();
+    expect((await bruno.client.from("check_ins").select("id")).data).toEqual([]);
+    // Os registros da Ana continuam
+    expect((await ana.client.from("check_ins").select("id")).data?.length).toBeGreaterThan(0);
+  });
+
+  it("delete_my_account remove o usuário e tudo em cascata", async () => {
+    const carla = await newVisitor("Carla");
+    await carla.client.from("check_ins").insert({ emotion: "cansaco", note: "apagar tudo" });
+    expect((await carla.client.rpc("delete_my_account")).error).toBeNull();
+
+    // Com o JWT antigo (ainda assinado), o banco não devolve mais nada do usuário apagado
+    expect((await carla.client.from("profiles").select("id")).data).toEqual([]);
+    expect((await carla.client.from("check_ins").select("id")).data).toEqual([]);
+  });
+});
+
 describe("sem sessão", () => {
   it("o papel anônimo da API (sem login) não lê conteúdo nem dados", async () => {
     const guest = newClient();

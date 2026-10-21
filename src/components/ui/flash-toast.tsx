@@ -24,11 +24,16 @@ export function FlashToast({ message }: { message: string | null }) {
   }, [message]);
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-[calc(var(--nav-height)+env(safe-area-inset-bottom)+16px)] z-50 flex justify-center px-5 md:bottom-8 md:left-[96px] lg:left-[256px]">
+    // A região live existe sempre (mesmo vazia): leitores de tela anunciam melhor conteúdo
+    // inserido numa região já presente do que uma região criada junto com o texto.
+    <div
+      role="status"
+      aria-live="polite"
+      className="pointer-events-none fixed inset-x-0 bottom-[calc(var(--nav-height)+env(safe-area-inset-bottom)+16px)] z-50 flex justify-center px-5 md:bottom-8 md:left-[96px] lg:left-[256px]"
+    >
       <AnimatePresence>
         {visible && message ? (
           <motion.div
-            role="status"
             initial={{ opacity: 0, y: 16, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1, transition: { ...SPRING.sheet, delay: 0.35 } }}
             exit={{ opacity: 0, y: 8, transition: { duration: 0.2, ease: EASE.exit } }}

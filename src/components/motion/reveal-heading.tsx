@@ -4,7 +4,6 @@ import { useRef, type ReactNode } from "react";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
-import { cn } from "@/lib/cn";
 import { DUR, STAGGER } from "@/lib/motion";
 
 type Props = {
@@ -20,6 +19,8 @@ type Props = {
  * - `autoSplit` refaz a divisão quando a fonte termina de carregar ou a largura muda.
  * - Movimento reduzido: apenas um fade curto.
  * - Divisão só por linhas (aria: "none"): o texto continua legível para leitores de tela.
+ * - Começa oculto por CSS (data-reveal-pending) só até o GSAP assumir; sem JS, um <noscript>
+ *   no layout raiz deixa tudo visível.
  */
 export function RevealHeading({ as: Tag = "h1", children, className, delay = 0, id }: Props) {
   const ref = useRef<HTMLHeadingElement>(null);
@@ -67,7 +68,7 @@ export function RevealHeading({ as: Tag = "h1", children, className, delay = 0, 
   );
 
   return (
-    <Tag ref={ref} id={id} className={cn("invisible", className)}>
+    <Tag ref={ref} id={id} data-reveal-pending="" className={className}>
       {children}
     </Tag>
   );

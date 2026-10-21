@@ -7,6 +7,7 @@ import { Button, ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 /** Erro inesperado ao carregar uma tela: explica com calma e oferece tentar de novo. */
+// `retry` (e não `reset`) é a API estável do error.tsx no Next 16: refaz o fetch e re-renderiza.
 export default function AppError({ error, retry }: { error: Error & { digest?: string }; retry: () => void }) {
   useEffect(() => {
     console.error(error);

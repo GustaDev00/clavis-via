@@ -195,7 +195,12 @@ isOneToOne: false
             [_ in never]: never
           }
           Functions: {
-            [_ in never]: never
+            "delete_my_account":
+{ Args: Record<PropertyKey, never>; Returns: undefined
+                           },
+"reset_my_demo":
+{ Args: Record<PropertyKey, never>; Returns: undefined
+                           }
           }
           Enums: {
             "emotion": "ansiedade"|"cansaco"|"desanimo"|"irritacao"|"sensibilidade"|"paz"|"esperanca"|"outro","practice_kind": "respiracao"|"corpo"|"escrita"|"pausa"|"gratidao"|"contemplacao"

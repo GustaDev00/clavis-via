@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getViewer } from "@/lib/dal/viewer";
 import { enterDemoSchema, toFieldErrors } from "@/lib/domain/validation";
-import { errorState, GENERIC_ERROR, type FormState } from "@/lib/actions/state";
+import { errorState, GENERIC_ERROR, logActionError, type FormState } from "@/lib/actions/state";
 
 export type EnterDemoField = "displayName";
 
@@ -24,11 +24,19 @@ export async function enterDemo(
   const supabase = await createClient();
 
   // Já existe sessão (ex.: dois cliques): só segue para o app.
-  if (await getViewer()) redirect("/check-in");
+  const existing = await getViewer();
+  if (existing?.hasProfile) redirect("/check-in");
+  if (existing) {
+    // Cookie válido sem perfil (banco reiniciado, conta apagada): recria o perfil com o nome
+    // informado; se o usuário não existir mais na Auth, encerra a sessão e começa do zero.
+    const { error } = await supabase.from("profiles").insert({ id: existing.id, display_name: parsed.data.displayName });
+    if (!error) redirect("/check-in");
+    await supabase.auth.signOut();
+  }
 
   const { data, error } = await supabase.auth.signInAnonymously();
   if (error || !data.user) {
-    console.error("[enterDemo] signInAnonymously", error);
+    logActionError("[enterDemo] signInAnonymously", error);
     const message =
       error?.status === 429
         ? "Muitas entradas de demonstração em sequência. Aguarde alguns minutos e tente de novo."
@@ -41,7 +49,7 @@ export async function enterDemo(
     .insert({ id: data.user.id, display_name: parsed.data.displayName });
 
   if (profileError) {
-    console.error("[enterDemo] profile insert", profileError);
+    logActionError("[enterDemo] profile insert", profileError);
     await supabase.auth.signOut();
     return errorState(previous, { message: GENERIC_ERROR });
   }
@@ -49,12 +57,26 @@ export async function enterDemo(
   redirect("/check-in");
 }
 
-/** Encerra a sessão. Para visitantes anônimos, os dados ficam inacessíveis depois disso. */
+/**
+ * "Sair": para um visitante anônimo não existe "voltar depois", então sair é apagar.
+ * A função `delete_my_account()` remove o usuário da Auth e, em cascata, perfil, check-ins,
+ * práticas e progresso (direito de eliminação). Depois encerra a sessão.
+ */
 export async function signOut(previous: FormState): Promise<FormState> {
   const supabase = await createClient();
+  const viewer = await getViewer();
+
+  if (viewer?.isAnonymous) {
+    const { error } = await supabase.rpc("delete_my_account");
+    if (error) {
+      logActionError("[signOut] delete_my_account", error);
+      return errorState(previous, { message: GENERIC_ERROR });
+    }
+  }
+
   const { error } = await supabase.auth.signOut();
   if (error) {
-    console.error("[signOut]", error);
+    logActionError("[signOut]", error);
     return errorState(previous, { message: GENERIC_ERROR });
   }
   redirect("/");

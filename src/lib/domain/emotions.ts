@@ -37,7 +37,3 @@ export function getEmotion(id: Emotion): EmotionMeta {
   if (!emotion) throw new Error(`Emoção desconhecida: ${id}`);
   return emotion;
 }
-
-export function isEmotion(value: unknown): value is Emotion {
-  return typeof value === "string" && EMOTIONS_BY_ID.has(value as Emotion);
-}

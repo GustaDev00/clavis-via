@@ -16,8 +16,8 @@ export function DemoDataCard() {
         <div className="flex flex-col gap-1">
           <h2 className="font-bold text-ink">Seus dados nesta demonstração</h2>
           <p className="text-sm leading-5 text-text-soft">
-            Você entrou como visitante anônimo. Seus registros ficam salvos no banco e só esta sessão consegue
-            acessá-los. Use apenas informações fictícias.
+            Você entrou como visitante anônimo. Seus registros ficam salvos no banco, só esta sessão consegue
+            acessá-los e eles são apagados ao sair (ou após 30 dias sem uso). Use apenas informações fictícias.
           </p>
         </div>
       </div>
@@ -43,8 +43,8 @@ export function DemoDataCard() {
           }
           triggerClassName={buttonClasses({ variant: "ghost", size: "md", className: "w-full" })}
           title="Sair da demonstração?"
-          description="Como você entrou sem cadastro, não será possível voltar a esta mesma jornada depois de sair."
-          confirmLabel="Sair mesmo assim"
+          description="Ao sair, seus registros desta demonstração são apagados do banco. Não dá para voltar a esta jornada depois."
+          confirmLabel="Apagar e sair"
           pendingLabel="Saindo…"
           action={signOut}
           tone="primary"

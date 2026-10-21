@@ -1,0 +1,2 @@
+-- O conteúdo de demonstração vive em migrations/*_seed_content.sql (idempotente, versionado).
+-- Este arquivo existe só porque o CLI o procura em `supabase db reset`.

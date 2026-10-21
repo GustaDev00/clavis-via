@@ -64,15 +64,15 @@ export function PlanList({ plans }: { plans: PlanCardData[] }) {
             <motion.li
               key={plan.slug}
               layout
-              initial={{ opacity: 0, y: 14, filter: "blur(4px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.5, ease: EASE.outSoft, delay: 0.05 + index * 0.06 } }}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE.outSoft, delay: 0.05 + index * 0.06 } }}
               exit={{ opacity: 0, scale: 0.97, transition: { duration: 0.2, ease: EASE.exit } }}
               transition={{ layout: { duration: 0.42, ease: EASE.inOutSoft } }}
             >
               <Link
                 href={`/planos/${plan.slug}`}
                 transitionTypes={["nav-forward"]}
-                className="group flex items-stretch gap-4 rounded-card border border-white/70 bg-surface/80 p-3 shadow-soft backdrop-blur-md hover:-translate-y-0.5 hover:shadow-lift active:scale-[0.985] md:h-full md:flex-col md:gap-3"
+                className="group flex items-stretch gap-4 rounded-card border border-white/70 bg-surface/85 p-3 shadow-soft hover:-translate-y-0.5 hover:shadow-lift active:scale-[0.985] md:h-full md:flex-col md:gap-3"
               >
                 <span
                   aria-hidden

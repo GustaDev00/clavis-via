@@ -36,7 +36,7 @@ export function AuroraCanvas({
       depth: false,
       stencil: false,
       powerPreference: "low-power",
-      preserveDrawingBuffer: true,
+      preserveDrawingBuffer: false,
     });
     if (!gl) return;
 
@@ -135,6 +135,8 @@ export function AuroraCanvas({
     };
     frame = requestAnimationFrame(render);
 
+    // Contexto perdido (GPU sob pressão): o canvas some com fade e o fundo CSS por baixo
+    // assume. Não tentamos recriar: numa demo, o fallback estático é preferível a um ciclo de perdas.
     const onContextLost = (event: Event) => {
       event.preventDefault();
       cancelAnimationFrame(frame);

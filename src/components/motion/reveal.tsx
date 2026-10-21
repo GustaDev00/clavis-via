@@ -5,12 +5,12 @@ import { DUR, EASE, STAGGER } from "@/lib/motion";
 
 type RevealProps = HTMLMotionProps<"div"> & { delay?: number };
 
-/** Entrada suave de um bloco: opacidade + subida curta + desfoque leve. */
+/** Entrada suave de um bloco: opacidade + subida curta (só transform/opacity: barato no celular). */
 export function Reveal({ delay = 0, children, ...props }: RevealProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 14, filter: "blur(4px)" }}
-      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: DUR.macro, ease: EASE.outSoft, delay }}
       {...props}
     >
@@ -39,8 +39,8 @@ export function StaggerItem({ children, ...props }: HTMLMotionProps<"div">) {
   return (
     <motion.div
       variants={{
-        hidden: { opacity: 0, y: 14, filter: "blur(4px)" },
-        visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: DUR.macro, ease: EASE.outSoft } },
+        hidden: { opacity: 0, y: 14 },
+        visible: { opacity: 1, y: 0, transition: { duration: DUR.macro, ease: EASE.outSoft } },
       }}
       {...props}
     >

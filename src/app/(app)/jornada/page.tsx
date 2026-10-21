@@ -10,7 +10,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { getCheckInsSince } from "@/lib/dal/check-ins";
-import { getRecentPracticeCompletions } from "@/lib/dal/practice-completions";
+import { countPracticeCompletions, getRecentPracticeCompletions } from "@/lib/dal/practice-completions";
 import { getPlansWithProgress } from "@/lib/dal/progress";
 import { cn } from "@/lib/cn";
 import { formatMoment, toDayKey } from "@/lib/domain/dates";
@@ -23,10 +23,11 @@ export const metadata: Metadata = { title: "Minha jornada" };
 export default async function JourneyPage() {
   const now = new Date();
   const todayKey = toDayKey(now);
-  const [checkIns, plans, practices] = await Promise.all([
+  const [checkIns, plans, practices, practiceCount] = await Promise.all([
     getCheckInsSince(30),
     getPlansWithProgress(),
     getRecentPracticeCompletions(6),
+    countPracticeCompletions(),
   ]);
 
   const streak = computeStreak(checkIns, todayKey);
@@ -90,7 +91,7 @@ export default async function JourneyPage() {
             {[
               { value: checkIns.length, label: "check-ins em 30 dias" },
               { value: completedDays, label: "dias de plano" },
-              { value: practices.length, label: "práticas recentes" },
+              { value: practiceCount, label: "práticas feitas" },
             ].map((stat) => (
               <Card key={stat.label} className="flex flex-col gap-1 p-3.5">
                 <CountUp value={stat.value} className="tabular text-[28px] leading-none font-bold tracking-tight text-ink" />
@@ -166,7 +167,7 @@ export default async function JourneyPage() {
           {/* Práticas */}
           {practices.length > 0 ? (
             <StaggerItem className="flex flex-col gap-3">
-              <h2 className="pt-2 text-[17px] font-bold text-ink">Práticas feitas</h2>
+              <h2 className="pt-2 text-[17px] font-bold text-ink">Últimas práticas</h2>
               <Card className="divide-y divide-line/70 px-4">
                 {practices.map((completion) => (
                   <div key={completion.id} className="flex items-center justify-between gap-3 py-3">

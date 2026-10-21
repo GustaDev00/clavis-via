@@ -3,8 +3,8 @@
 -- Princípios:
 -- 1. Cada linha de dado pessoal pertence a um usuário (user_id) e só ele a enxerga (RLS + auth.uid()).
 -- 2. Conteúdo editorial (práticas, planos, dias) é somente leitura para quem está autenticado.
--- 3. Nada fica exposto na Data API sem GRANT explícito (auto_expose_new_tables = false),
---    e os GRANTs são por coluna quando o usuário só pode escrever parte da linha.
+-- 3. Os GRANTs são explícitos e por coluna quando o usuário só pode escrever parte da linha.
+--    A exposição automática que a nuvem aplica a tabelas novas é revogada em *_harden_grants.sql.
 
 -- ---------------------------------------------------------------------------
 -- Tipos

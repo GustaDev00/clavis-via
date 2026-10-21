@@ -10,6 +10,18 @@ export type PracticeCompletion = {
   practice: { slug: string; title: string; kind: string } | null;
 };
 
+/** Total de práticas concluídas pelo usuário (sem carregar as linhas). */
+export const countPracticeCompletions = cache(async (): Promise<number> => {
+  const viewer = await requireViewer();
+  const supabase = await createClient();
+  const { count, error } = await supabase
+    .from("practice_completions")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", viewer.id);
+  if (error) throw new Error("Não foi possível contar suas práticas.", { cause: error });
+  return count ?? 0;
+});
+
 export const getRecentPracticeCompletions = cache(async (limit = 10): Promise<PracticeCompletion[]> => {
   const viewer = await requireViewer();
   const supabase = await createClient();

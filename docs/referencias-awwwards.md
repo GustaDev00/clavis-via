@@ -1,5 +1,7 @@
 # CLAVIS VIA: pesquisa Awwwards de fundos, efeitos e tipografia
 
+> Relatório de pesquisa produzido com apoio de IA (Claude Code) a partir dos sites premiados, com inspeção do código público de cada um. Serviu de base para as decisões de design; as escolhas finais (Bricolage Grotesque, sistema de fundo "seda + grão + luz") estão no [README](../README.md#design-fundo-vivo-tipografia-e-referências). A recomendação de fonte deste relatório (Fraunces) **não** foi a adotada: o autor preferiu a Bricolage Grotesque numa prévia lado a lado.
+
 Data: 20/10/2026 · Escopo: mobile-first, PT-BR, Next.js 16 + React 19 + Tailwind v4 + GSAP 3.15 + Motion
 
 ## Como esta pesquisa foi feita

@@ -84,7 +84,7 @@ export function EmotionPicker({ value, onChange, invalid, describedBy, labelledB
             whileTap={{ scale: 0.96 }}
             className={cn(
               "group relative flex h-full flex-col items-center justify-center gap-[clamp(4px,0.9dvh,8px)] rounded-tile",
-              "border border-white/80 bg-surface/75 px-1.5 text-center shadow-soft backdrop-blur",
+              "border border-white/80 bg-surface/85 px-1.5 text-center shadow-soft",
               "hover:-translate-y-0.5 hover:shadow-lift focus-visible:outline-offset-2",
               // 3 por linha; a última linha (2 itens) fica centralizada
               "min-[360px]:col-span-2 lg:col-span-1",

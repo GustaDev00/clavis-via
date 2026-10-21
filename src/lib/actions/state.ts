@@ -25,5 +25,10 @@ export function errorState<Field extends string>(
   };
 }
 
+/** Log técnico sem dados do usuário: só código e mensagem do erro (nunca `details`/`hint`). */
+export function logActionError(tag: string, error: { code?: string | null; message?: string } | null | undefined) {
+  console.error(tag, { code: error?.code ?? null, message: error?.message ?? "erro desconhecido" });
+}
+
 export const GENERIC_ERROR = "Algo não saiu como esperado. Tente novamente em instantes.";
 export const SESSION_ERROR = "Sua sessão de demonstração expirou. Volte à entrada para começar de novo.";

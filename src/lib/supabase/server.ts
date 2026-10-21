@@ -3,7 +3,7 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { cache } from "react";
 import type { Database } from "./database.types";
-import { supabaseEnv } from "./env";
+import { capSessionCookie, SESSION_COOKIE_OPTIONS, supabaseEnv } from "./env";
 
 /**
  * Cliente Supabase do lado do servidor, autenticado com a sessão do cookie.
@@ -16,13 +16,14 @@ export const createClient = cache(async () => {
   const { url, publishableKey } = supabaseEnv();
 
   return createServerClient<Database>(url, publishableKey, {
+    cookieOptions: SESSION_COOKIE_OPTIONS,
     cookies: {
       getAll() {
         return cookieStore.getAll();
       },
       setAll(cookiesToSet) {
         try {
-          cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
+          cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, capSessionCookie(options)));
         } catch {
           // Chamado a partir de um Server Component: o proxy.ts já renova a sessão.
         }

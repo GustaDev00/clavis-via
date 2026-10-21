@@ -40,6 +40,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="pt-BR" className={`${display.variable} ${sans.variable} antialiased`}>
       <body className="min-h-dvh">
+        <noscript>
+          <style>{`[data-reveal-pending],[data-intro-hero],[data-intro-pillar],[data-intro-step]{visibility:visible!important;opacity:1!important}`}</style>
+        </noscript>
         {/* Camadas do fundo: CSS (fallback) → aurora WebGL → grão; o conteúdo vem por cima */}
         <AmbientBackground />
         <div aria-hidden className="grain" />

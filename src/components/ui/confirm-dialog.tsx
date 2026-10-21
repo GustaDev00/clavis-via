@@ -42,6 +42,8 @@ export function ConfirmDialog({ triggerLabel, triggerClassName, title, descripti
           // Clique fora do conteúdo (no backdrop) fecha
           if (event.target === dialogRef.current && !pending) dialogRef.current?.close();
         }}
+        // Esc não fecha enquanto a ação está em andamento
+        onCancel={(event) => pending && event.preventDefault()}
       >
         <form action={formAction} className="flex flex-col gap-5">
           <div className="flex flex-col gap-2">

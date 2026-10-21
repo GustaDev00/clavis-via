@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import type { Database } from "./database.types";
-import { supabaseEnv } from "./env";
+import { capSessionCookie, SESSION_COOKIE_OPTIONS, supabaseEnv } from "./env";
 
 /** Rotas acessíveis sem sessão. */
 const PUBLIC_PATHS = new Set(["/", "/api/health"]);
@@ -16,6 +16,7 @@ export async function updateSession(request: NextRequest) {
   const { url, publishableKey } = supabaseEnv();
 
   const supabase = createServerClient<Database>(url, publishableKey, {
+    cookieOptions: SESSION_COOKIE_OPTIONS,
     cookies: {
       getAll() {
         return request.cookies.getAll();
@@ -23,7 +24,7 @@ export async function updateSession(request: NextRequest) {
       setAll(cookiesToSet) {
         cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
         response = NextResponse.next({ request });
-        cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
+        cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, capSessionCookie(options)));
       },
     },
   });

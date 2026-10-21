@@ -21,15 +21,7 @@ export function PageTransition({ children }: { children: ReactNode }) {
   );
 }
 
-/** Revelação do conteúdo que chega depois do esqueleto (Suspense). */
-export function RevealIn({ children }: { children: ReactNode }) {
-  return (
-    <ViewTransition enter="reveal-in" default="none">
-      {children}
-    </ViewTransition>
-  );
-}
-
+/** Saída do esqueleto quando o conteúdo chega (Suspense). */
 export function RevealOut({ children }: { children: ReactNode }) {
   return (
     <ViewTransition exit="reveal-out" default="none">

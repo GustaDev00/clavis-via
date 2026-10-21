@@ -15,7 +15,7 @@ const variants: Record<Variant, string> = {
     "bg-navy text-white shadow-soft hover:-translate-y-px hover:bg-navy-hover hover:shadow-lift active:translate-y-0 active:bg-navy-pressed",
   soft: "bg-sky-100 text-ink hover:-translate-y-px hover:bg-sky-200 active:translate-y-0",
   outline:
-    "border border-line bg-surface/80 text-ink backdrop-blur hover:-translate-y-px hover:border-lav-300 hover:shadow-soft active:translate-y-0",
+    "border border-line bg-surface/85 text-ink hover:-translate-y-px hover:border-lav-300 hover:shadow-soft active:translate-y-0",
   ghost: "text-ink hover:bg-navy-50",
   danger: "bg-error-bg text-error hover:-translate-y-px hover:bg-rose-200 active:translate-y-0",
 };
@@ -57,7 +57,8 @@ export function Button({
       type={type}
       className={buttonClasses({ variant, size, className })}
       aria-busy={pending || undefined}
-      aria-disabled={pending || undefined}
+      // disabled de verdade: bloqueia também o Enter do teclado durante o envio
+      disabled={pending || props.disabled}
       {...props}
     >
       <PendingStack pending={pending} pendingLabel={pendingLabel}>

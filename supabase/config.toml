@@ -1,3 +1,6 @@
+# Configuração do Supabase LOCAL (pnpm db:start). O app usa só Postgres + Auth (login anônimo) + Data API.
+# Nunca espelhe este arquivo para a nuvem (`supabase config push`) sem revisar: limites e flags abaixo
+# são de desenvolvimento (ex.: 2000 logins anônimos/h). Em produção: e-mail/senha desligado, 30/h por IP.
 # For detailed configuration reference documentation, visit:
 # https://supabase.com/docs/guides/local-development/cli/config
 # A string used to distinguish different Supabase projects on the same host. Defaults to the
@@ -222,7 +225,7 @@ web3 = 30
 
 [auth.email]
 # Allow/disallow new user signups via email to your project.
-enable_signup = true
+enable_signup = false
 # If enabled, a user will be required to confirm any email change on both the old, and new email
 # addresses. If disabled, only the new email is required to confirm.
 double_confirm_changes = true

@@ -5,7 +5,7 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { getViewer } from "@/lib/dal/viewer";
 import { completePlanDaySchema, toFieldErrors } from "@/lib/domain/validation";
-import { errorState, GENERIC_ERROR, SESSION_ERROR, type FormState } from "@/lib/actions/state";
+import { errorState, GENERIC_ERROR, logActionError, SESSION_ERROR, type FormState } from "@/lib/actions/state";
 
 const slugSchema = z.string().min(1).max(80);
 
@@ -24,7 +24,7 @@ export async function startPlan(previous: FormState, formData: FormData): Promis
   const { error } = await supabase.from("plan_enrollments").insert({ plan_id: plan.id });
   // 23505 = já inscrito: segue normalmente
   if (error && error.code !== "23505") {
-    console.error("[startPlan]", error);
+    logActionError("[startPlan]", error);
     return errorState(previous, { message: GENERIC_ERROR });
   }
 
@@ -64,7 +64,7 @@ export async function completePlanDay(
   // Garante a inscrição (quem abre o dia por link direto também pode concluir)
   const enrollment = await supabase.from("plan_enrollments").insert({ plan_id: plan.id });
   if (enrollment.error && enrollment.error.code !== "23505") {
-    console.error("[completePlanDay] enrollment", enrollment.error);
+    logActionError("[completePlanDay] enrollment", enrollment.error);
     return errorState(previous, { message: GENERIC_ERROR });
   }
 
@@ -78,7 +78,7 @@ export async function completePlanDay(
       if (error.code === "P0001" && error.hint === "previous_day_required") {
         return errorState(previous, { message: `Conclua o dia ${dayNumber - 1} antes de seguir para este.` });
       }
-      console.error("[completePlanDay]", error);
+      logActionError("[completePlanDay]", error);
       return errorState(previous, { message: GENERIC_ERROR });
     }
   }

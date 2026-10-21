@@ -42,13 +42,3 @@ export const STAGGER = {
   items: 0.06,
   tiles: 0.04,
 } as const;
-
-/** Entrada padrão: opacidade + subida curta. Nunca aparece do zero. */
-export const riseIn = {
-  hidden: { opacity: 0, y: 12, filter: "blur(4px)" },
-  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: DUR.macro, ease: EASE.outSoft } },
-} as const;
-
-export function toCssBezier([a, b, c, d]: readonly number[]) {
-  return `cubic-bezier(${a}, ${b}, ${c}, ${d})`;
-}

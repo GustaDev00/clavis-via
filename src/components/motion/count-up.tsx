@@ -27,7 +27,7 @@ export function CountUp({ value, className }: { value: number; className?: strin
   }, [value, reduce]);
 
   return (
-    <span ref={ref} className={className} aria-label={String(value)}>
+    <span ref={ref} className={className}>
       {value}
     </span>
   );

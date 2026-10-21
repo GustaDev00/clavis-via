@@ -60,7 +60,7 @@ test.describe("com sessão", () => {
     await expect(page.getByText("Feita hoje")).toBeVisible();
 
     await page.goto("/jornada");
-    await expect(page.getByText("Práticas feitas")).toBeVisible();
+    await expect(page.getByText("Últimas práticas")).toBeVisible();
   });
 
   test("respiração guiada: o círculo cresce ao inspirar e a fase é anunciada", async ({ page }) => {
@@ -83,7 +83,6 @@ test.describe("com sessão", () => {
     await expect(page.locator("[data-orb]")).toHaveCount(0);
     await expect(page.getByRole("main").getByRole("listitem")).toHaveCount(4);
   });
-
 
   test("links de voltar levam ao nível anterior", async ({ page }) => {
     await page.goto("/planos/voz-e-limites/dia/1");
@@ -174,7 +173,7 @@ test.describe("com sessão", () => {
   test("sair encerra a sessão", async ({ page }) => {
     await page.goto("/jornada");
     await page.getByRole("button", { name: "Sair" }).click();
-    await page.getByRole("dialog").getByRole("button", { name: "Sair mesmo assim" }).click();
+    await page.getByRole("dialog").getByRole("button", { name: "Apagar e sair" }).click();
     await expect(page).toHaveURL(/\/$/);
     await page.goto("/hoje");
     await expect(page).toHaveURL(/\/$/);

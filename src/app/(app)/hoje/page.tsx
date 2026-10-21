@@ -17,7 +17,7 @@ import { getPractices } from "@/lib/dal/content";
 import { getRecentPracticeCompletions } from "@/lib/dal/practice-completions";
 import { getPlansWithProgress, progressBySlug } from "@/lib/dal/progress";
 import { requireViewer } from "@/lib/dal/viewer";
-import { formatMoment, greetingFor, toDayKey } from "@/lib/domain/dates";
+import { APP_TIME_ZONE, formatMoment, greetingFor, toDayKey } from "@/lib/domain/dates";
 import { getEmotion } from "@/lib/domain/emotions";
 import { PRACTICE_KIND_LABEL } from "@/lib/domain/practices";
 import { pickPlan, pickPractice } from "@/lib/domain/recommendation";
@@ -38,7 +38,7 @@ export default async function TodayPage({ searchParams }: PageProps<"/hoje">) {
   const todayKey = toDayKey(now);
   const [viewer, checkIn, practices, plans, completions, { salvo }] = await Promise.all([
     requireViewer(),
-    getTodayCheckIn(),
+    getTodayCheckIn(now),
     getPractices(),
     getPlansWithProgress(),
     getRecentPracticeCompletions(20),
@@ -64,7 +64,7 @@ export default async function TodayPage({ searchParams }: PageProps<"/hoje">) {
     weekday: "long",
     day: "numeric",
     month: "long",
-    timeZone: "America/Sao_Paulo",
+    timeZone: APP_TIME_ZONE,
   }).format(now);
   const flash = typeof salvo === "string" ? (FLASH[salvo] ?? null) : null;
   // Cumprimenta pelo primeiro nome: mais próximo e cabe em uma linha mesmo com nomes longos
@@ -73,11 +73,14 @@ export default async function TodayPage({ searchParams }: PageProps<"/hoje">) {
   return (
     <PageTransition>
       <AmbientTone tone={toneKey} />
-      {/* Faixa de luz no horizonte, na cor da emoção do dia (fica entre a aurora e o grão) */}
+      {/* Faixa de luz no horizonte, na cor da emoção do dia (entre a aurora e o grão).
+          Gradiente já suave: sem filter: blur, que custaria caro numa área desse tamanho. */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-x-0 top-0 -z-[6] h-[38dvh] opacity-70 blur-[48px] [mask-image:linear-gradient(to_bottom,black_20%,transparent)]"
-        style={{ background: `linear-gradient(90deg, ${tone.to} 0%, #dcd3f3 55%, #cfe0f5 100%)` }}
+        className="pointer-events-none fixed inset-x-0 top-0 -z-[6] h-[42dvh] opacity-80"
+        style={{
+          background: `radial-gradient(70% 60% at 20% 0%, ${tone.to} 0%, transparent 70%), radial-gradient(60% 55% at 80% 10%, #cfe0f5 0%, transparent 70%)`,
+        }}
       />
       <section className="screen-fit gap-[clamp(10px,2dvh,20px)] pt-[clamp(2px,1dvh,10px)] lg:min-h-0">
         <header className="flex flex-col gap-[clamp(2px,0.8dvh,8px)]">

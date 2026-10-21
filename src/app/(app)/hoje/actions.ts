@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { getViewer } from "@/lib/dal/viewer";
-import { errorState, GENERIC_ERROR, SESSION_ERROR, type FormState } from "@/lib/actions/state";
+import { errorState, GENERIC_ERROR, logActionError, SESSION_ERROR, type FormState } from "@/lib/actions/state";
 
 const completePracticeSchema = z.object({
   practiceSlug: z.string().min(1).max(80),
@@ -35,7 +35,7 @@ export async function completePractice(previous: FormState, formData: FormData):
     .insert({ practice_id: practice.id, check_in_id: parsed.data.checkInId });
 
   if (error) {
-    console.error("[completePractice]", error);
+    logActionError("[completePractice]", error);
     return errorState(previous, { message: GENERIC_ERROR });
   }
 

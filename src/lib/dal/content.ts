@@ -37,8 +37,3 @@ export const getPlansWithDays = cache(async (): Promise<PlanWithDays[]> => {
   if (error) throw new Error("Não foi possível carregar os planos.", { cause: error });
   return data;
 });
-
-export async function getPlanWithDays(slug: string): Promise<PlanWithDays | null> {
-  const plans = await getPlansWithDays();
-  return plans.find((plan) => plan.slug === slug) ?? null;
-}

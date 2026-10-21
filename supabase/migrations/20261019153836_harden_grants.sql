@@ -14,6 +14,8 @@ revoke all on all sequences in schema public from anon, authenticated;
 alter default privileges for role postgres in schema public revoke all on tables from anon, authenticated;
 alter default privileges for role postgres in schema public revoke all on sequences from anon, authenticated;
 
+-- Os GRANTs abaixo repetem os de *_init_schema.sql de propósito: o `revoke all` acima
+-- os apagou junto com a exposição automática, e esta migration precisa ser autossuficiente.
 grant select on public.practices, public.plans, public.plan_days to authenticated;
 
 grant select on public.profiles to authenticated;

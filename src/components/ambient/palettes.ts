@@ -1,9 +1,12 @@
 import type { EmotionTone } from "@/lib/domain/emotions";
 
 /** Quatro cores (hex) que a aurora mistura. "aurora" é o padrão da marca. */
+const AURORA: [string, string, string, string] = ["#cfe0f5", "#dcd3f3", "#f7d3dd", "#e3ecf8"];
+
 export const AMBIENT_PALETTES: Record<EmotionTone | "brand", [string, string, string, string]> = {
-  brand: ["#cfe0f5", "#dcd3f3", "#f7d3dd", "#e3ecf8"],
-  aurora: ["#cfe0f5", "#dcd3f3", "#f7d3dd", "#e3ecf8"],
+  /** Tom da marca = a aurora padrão (sem emoção registrada) */
+  brand: AURORA,
+  aurora: AURORA,
   peach: ["#fde3d3", "#f9cfb3", "#f7d3dd", "#fdede3"],
   sky: ["#cfe0f5", "#bcd3f0", "#dcd3f3", "#e3ecf8"],
   lavender: ["#dcd3f3", "#c6b9ec", "#cfe0f5", "#ece7f8"],

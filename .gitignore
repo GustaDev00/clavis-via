@@ -52,3 +52,6 @@ skills-lock.json
 
 # exemplo de variáveis (sem segredos) é versionado
 !.env.example
+
+# material de estudo pessoal (não faz parte da entrega)
+/docs/privado

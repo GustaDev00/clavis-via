@@ -35,13 +35,18 @@ export function EnterDemoForm() {
           label="Como podemos te chamar?"
           placeholder="Seu nome ou apelido (opcional)"
           autoComplete="nickname"
+          // Deixa digitar além do limite de propósito: a mensagem de erro é parte da experiência testada
           maxLength={LIMITS.displayName + 20}
           value={displayName}
           onChange={(event) => {
             setDisplayName(event.target.value);
             setLocalErrors({});
           }}
-          hint="Sem cadastro — esta é uma demonstração."
+          hint={
+            <>
+              Sem cadastro. <span className="xshort:hidden">Os dados ficam salvos por 30 dias e podem ser apagados em Jornada.</span>
+            </>
+          }
           error={error}
           errorKey={attempt + (state.status === "error" ? state.attempt : 0)}
           className="h-[clamp(48px,7dvh,56px)]"
