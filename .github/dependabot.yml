@@ -7,6 +7,15 @@ updates:
     groups:
       dependencias:
         patterns: ["*"]
+    # Versões major da toolchain exigem trabalho manual (ex.: o typescript-eslint
+    # ainda não suporta o TypeScript 7); o bot propõe só patches e minors delas.
+    ignore:
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
+      - dependency-name: eslint
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
