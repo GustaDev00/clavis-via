@@ -40,8 +40,23 @@ export function Intro({ pillars, children }: { pillars: ReactNode; children: Rea
 
           gsap.set(hero, { autoAlpha: 1 });
           const wordmark = SplitText.create(q("[data-intro-wordmark]"), { type: "chars", aria: "hidden" });
-          const tagline = SplitText.create(q("[data-intro-tagline]"), { type: "lines", mask: "lines", aria: "none" });
-          tagline.masks?.forEach((mask) => mask.classList.add("split-line-mask"));
+          // A frase entra fora da timeline principal: com autoSplit, o GSAP refaz as linhas quando a
+          // fonte termina de carregar ou a largura muda (modo responsivo do DevTools) e recria esta
+          // animação no mesmo ponto, em vez de deixar linhas quebradas na largura antiga.
+          SplitText.create(q("[data-intro-tagline]"), {
+            type: "lines",
+            mask: "lines",
+            aria: "none",
+            autoSplit: true,
+            onSplit: (self) => {
+              self.masks?.forEach((mask) => mask.classList.add("split-line-mask"));
+              return gsap.fromTo(
+                self.lines,
+                { yPercent: 110 },
+                { yPercent: 0, duration: 0.9, ease: "expo.out", stagger: 0.08, delay: 0.95 },
+              );
+            },
+          });
 
           const rise = { y: 0, autoAlpha: 1, filter: "blur(0px)" };
 
@@ -60,7 +75,6 @@ export function Intro({ pillars, children }: { pillars: ReactNode; children: Rea
               { autoAlpha: 1, yPercent: 0, filter: "blur(0px)", duration: 0.8, stagger: 0.035 },
               0.55,
             )
-            .fromTo(tagline.lines, { yPercent: 110 }, { yPercent: 0, duration: 0.9, ease: "expo.out", stagger: 0.08 }, 0.95)
             .fromTo(pillarItems, { y: 14, autoAlpha: 0, filter: "blur(4px)" }, { ...rise, duration: 0.6, stagger: 0.08 }, 1.2)
             .fromTo(steps, { y: 16, autoAlpha: 0, filter: "blur(4px)" }, { ...rise, duration: 0.7, stagger: 0.08 }, 1.45);
 
